@@ -10,7 +10,7 @@
 class Square
 {
 	public:
-		Square (int id, const CvPoint& centerCoordinates, int width, int height);
+		Square (int id, const CvPoint &centerCoordinates, int width, int height);
 
 		int GetId () const;
 		CvPoint GetCenterCoordinates () const;

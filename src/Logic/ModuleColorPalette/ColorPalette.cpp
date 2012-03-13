@@ -1,5 +1,5 @@
 #include "ColorPalette.h"
-
+#include <stdio.h>
 
 // Here goes member definition
 
@@ -11,6 +11,10 @@
 
 void ColorPalette::ProcessSquares (const Square** recognizedSquares)
 {
+	int number_of_elements = sizeof(recognizedSquares)/sizeof(Square *);
+
+	printf("number of squares: %d",number_of_elements);
+
 
 }
 
@@ -24,3 +28,5 @@ ColorPalette::~ColorPalette ()
 {
 
 }
+
+//void GetColor()

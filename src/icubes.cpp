@@ -1,8 +1,10 @@
 #include "icubes.h"
+#include <stdio.h>
 
 iCubes::iCubes(QWidget *parent)
     : QMainWindow(parent)
 {
+	printf("Consturctor of iCubes called");
 	ui.setupUi(this);
 
     FrameProcessor m_videoStreamProcessor;

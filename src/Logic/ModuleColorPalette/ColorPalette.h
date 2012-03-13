@@ -16,11 +16,10 @@ class ColorPalette : public QObject
 	public:
 		~ColorPalette ();
 
-	public slots:
 		void ProcessSquares (const Square** recognizedSquares);
 
-	signals:
-		void SquaresProcessed (const Image** processedSquares);
+	//signals:
+	// 	void SquaresProcessed (const Image** processedSquares);
 
 };
 
