@@ -3,6 +3,8 @@
 
 #include "Square.h"
 #include <qobject.h>
+#include <vector>
+using namespace std;
 
 //---------------------------------------------------------------
 // Represents web camera stream reader, processor.
@@ -21,7 +23,7 @@ class FrameProcessor : public QObject
 
 	signals:
 	// squares recognized
-		void SquaresRecognized (const Square** recognizedQuadrilaterals);
+		void SquaresRecognized (const vector*<Square*> recognizedQuadrilaterals);
 };
 
 #endif

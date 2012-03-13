@@ -9,11 +9,11 @@
 // Expects to receive array of pointers on quadrilaterals instances which were recognized
 //---------------------------------------------------------------
 
-void ColorPalette::ProcessSquares (const Square** recognizedSquares)
+void ColorPalette::ProcessSquares (const vector*<Square*> recognizedSquares)
 {
-	int number_of_elements = sizeof(recognizedSquares)/sizeof(Square *);
+	//int number_of_elements = sizeof(recognizedSquares)/sizeof(Square *);
 
-	printf("number of squares: %d",number_of_elements);
+	//printf("number of squares: %d",number_of_elements);
 
 
 }
