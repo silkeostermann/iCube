@@ -7,6 +7,8 @@
 #include "Logic/ModuleColorPalette/ColorPalette.h"
 #include <QtGui/QMainWindow>
 #include "ui_icubes.h"
+#include <vector>
+using namespace std;
 
 class iCubes : public QMainWindow
 {
@@ -17,7 +19,7 @@ class iCubes : public QMainWindow
 		~iCubes();
 
 	public slots:
-		void ShowObjects (const Image** processedQuadrilaterals);
+		void ShowObjects (const vector*<Image*> processedQuadrilaterals);
 
 	private:
 		Ui::iCubesClass ui;

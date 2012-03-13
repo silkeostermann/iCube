@@ -4,7 +4,8 @@
 #include "../Recognition/Square.h"
 #include "../Image.h"
 #include <qobject.h>
-
+#include <vector>
+using namespace std;
 //---------------------------------------------------------------
 // Represents logic implementation, such strange name because no concrete logic chosen yet
 //---------------------------------------------------------------
@@ -16,10 +17,11 @@ class ColorPalette : public QObject
 	public:
 		~ColorPalette ();
 
-		void ProcessSquares (const Square** recognizedSquares);
+	public slots:
+		void ProcessSquares (const vector*<Square*> recognizedSquares);
 
-	//signals:
-	// 	void SquaresProcessed (const Image** processedSquares);
+	signals:
+		void SquaresProcessed (const vector*<Image*> processedSquares);
 
 };
 
