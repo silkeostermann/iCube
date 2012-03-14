@@ -9,7 +9,7 @@
 // Expects to receive array of pointers on quadrilaterals instances which were recognized
 //---------------------------------------------------------------
 
-void BinaryMath::ProcessSquares (const Square** recognizedSquares)
+void BinaryMath::ProcessSquares (const vector*<Square*> recognizedSquares)
 {
 
 }
