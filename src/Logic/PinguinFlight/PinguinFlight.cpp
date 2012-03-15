@@ -27,7 +27,7 @@ void PinguinFlight::ProcessSquares (const Square **recognizedSquares, int size)
 	for (int i=0;i<size;i++) {
 		const Square *pinguin = recognizedSquares[i];
 		CvPoint point	= pinguin->GetCenterCoordinates();
-		QString fileName = "./Logic/PinguinFlight/pinguin.jpg";
+		QString fileName = "./Logic/PinguinFlight/pinguin.png";
 		QImage *image = new QImage(fileName);
 		Image *pinguinImage = new Image(image, QPoint(point.x, point.y));
 		images[i] = pinguinImage;
