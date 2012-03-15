@@ -12,19 +12,12 @@
 
 Square::Square (int id, const CvPoint& centerCoordinates, int width, int height)
 {
-
+	this->centerCoordinates = centerCoordinates;
 }
 
 //---------------------------------------------------------------
 
 int Square::GetId () const
-{
-
-}
-
-//---------------------------------------------------------------
-
-CvPoint Square::GetCenterCoordinates () const
 {
 
 }

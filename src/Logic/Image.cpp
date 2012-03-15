@@ -12,17 +12,12 @@
 // Initializes members.
 //---------------------------------------------------------------
 
-Image::Image (QImage image, const QPoint& imageRelativeCoordinates)
+Image::Image (QImage image, const QPoint& imgRelativeCoordinates)
 {
-
+	image = image;
+	imageRelativeCoordinates = imgRelativeCoordinates;
 }
 
-//---------------------------------------------------------------
-
-QPoint Image::GetImageRelativeCoordinates () const
-{
-
-}
 
 //---------------------------------------------------------------
 // Destructor.

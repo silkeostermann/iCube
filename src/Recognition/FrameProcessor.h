@@ -2,16 +2,14 @@
 #define VIDEO_STREAM_PROCESSOR_H
 
 #include "Square.h"
-#include <qobject.h>
-#include <vector>
-using namespace std;
+#include <qthread.h>
 
 //---------------------------------------------------------------
 // Represents web camera stream reader, processor.
 //---------------------------------------------------------------
 
 // frame processor
-class FrameProcessor : public QObject
+class FrameProcessor : public QThread
 {
 	Q_OBJECT
 
@@ -19,11 +17,12 @@ class FrameProcessor : public QObject
 		void BeginRead (int webCamId, int fps);
 		void EndRead ();
 
+		void run ();
+
 		~FrameProcessor ();
 
 	signals:
-	// squares recognized
-		void SquaresRecognized (const vector*<Square*> recognizedQuadrilaterals);
+		void SquaresRecognized (const Square**, int);
 };
 
 #endif
