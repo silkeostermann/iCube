@@ -37,7 +37,7 @@ ColorPalette::ColorPalette() {
 	this->bluebar->load("Bar_Blue.png");
 }
 
-void ColorPalette::ProcessSquares (const Square **recognizedSquares, size_t size)
+void ColorPalette::ProcessSquares (const Square **recognizedSquares, int size)
 {
 	printf("Processing %d squares.\n", (int)size);
 
@@ -63,6 +63,7 @@ void ColorPalette::ProcessSquares (const Square **recognizedSquares, size_t size
 	CvPoint redpoint	= red->GetCenterCoordinates();
 	CvPoint greenpoint	= green->GetCenterCoordinates();
 
+
 	printf("xs of rgb: %d %d %d\n", redpoint.x, greenpoint.x, bluepoint.x);
 
 	int redAmount		= 255 * ((float)redpoint.x/100);
@@ -73,33 +74,56 @@ void ColorPalette::ProcessSquares (const Square **recognizedSquares, size_t size
 	int greenWidth = greenAmount*492/255;
 	int blueWidth = blueAmount*492/255;
 
+
+	QPoint redbarposition		= QPoint(20,40);
+	QPoint greenbarposition		=QPoint(20,60);
+	QPoint bluebarposition		= QPoint(20,80);
+
+	QPoint redbarslider		= QPoint(redpoint.x, 40);
+	QPoint greenbarslider	= QPoint(greenpoint.x, 60);
+	QPoint bluebarslider	= QPoint(bluepoint.x, 80);
+
 	// Compose the color
 	QColor *color = new QColor(redAmount, greenAmount, blueAmount, 255);
 	printf("Composing the color: [%d, %d, %d] => %lu\n", redAmount, greenAmount, blueAmount, color->rgb());
 
 	// Prepare the image and painter
-	QImage *image = new QImage(*this->interface);
-	QPainter *painter = new QPainter(image);
+	//QImage *image = new QImage(*this->interface);
+	//QPainter *painter = new QPainter(image);
+
+	Image *redbarimg = new Image(this->redbar->copy(0, 0, redWidth+10, 20),redbarposition);
+	Image *greenbarimg = new Image(this->greenbar->copy(0, 0, greenWidth+10, 20),greenbarposition);
+	Image *bluebarimg = new Image(this->bluebar->copy(0, 0, blueWidth+10, 20),bluebarposition);
+
+	Image *sliderimgred = new Image(*this->ball, redbarslider);
+	Image *sliderimggreen = new Image(*this->ball, greenbarslider);
+	Image *sliderimgblue = new Image(*this->ball, bluebarslider);
 
 	//Draw the section of a bar we need for each color
-	painter->drawImage(60, 185, (this->redbar->copy(0, 0, redWidth+10, 20)));
-	painter->drawImage(60, 267, (this->greenbar->copy(0, 0, greenWidth+10, 20)));
-	painter->drawImage(60, 347, (this->bluebar->copy(0, 0, blueWidth+10, 20)));
+	//painter->drawImage(60, 185, (this->redbar->copy(0, 0, redWidth+10, 20)));
+//	painter->drawImage(60, 267, (this->greenbar->copy(0, 0, greenWidth+10, 20)));
+//	painter->drawImage(60, 347, (this->bluebar->copy(0, 0, blueWidth+10, 20)));
 
 	// Draw ball for each color
-	painter->drawImage(redWidth+60, 180, *this->ball);
-	painter->drawImage(greenWidth+60, 262, *this->ball);
-	painter->drawImage(blueWidth+60, 342, *this->ball);
+//	painter->drawImage(redWidth+60, 180, *this->ball);
+//	painter->drawImage(greenWidth+60, 262, *this->ball);
+//	painter->drawImage(blueWidth+60, 342, *this->ball);
 
 	// Draw the chosen color
-	painter->fillRect(62, 445, 517, 106, color->rgb());
+//	painter->fillRect(62, 445, 517, 106, color->rgb());
 
 	// Save the image
-	image->save("test.png");
+	//image->save("test.png");
 
-	const Image *images[1];
-	images[0] = new Image(*image, QPoint(10, 10));
-	SquaresProcessed(images, 1);
+	const Image *images[6];
+	images[0] = redbarimg;
+	images[1] = bluebarimg;
+	images[2] = greenbarimg;
+	images[3] = sliderimgred;
+	images[4] = sliderimggreen;
+	images[5] = sliderimgblue;
+
+	SquaresProcessed(images, 6);
 }
 
 

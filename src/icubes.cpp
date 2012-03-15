@@ -1,6 +1,7 @@
 #include "icubes.h"
 #include "configure.h"
 #include <QTimer>
+#include <cstdio>
 
 iCubes::iCubes(QWidget *parent)
     : QMainWindow(parent)
@@ -12,11 +13,24 @@ iCubes::iCubes(QWidget *parent)
 
     BinaryMath m_objectProcessor;
 
-	QObject::connect(&m_videoStreamProcessor, SIGNAL (SquaresRecognized (const Square**, int)),
-						&m_objectProcessor, SLOT (ProcessSquares (const Square**, int)));
+		// Setup Color Palette
+		// -------------------
+		this->palette = new ColorPalette();
+		// When user clicks the 'configure' button (temp solution), the demoSquares
+		// method is called.
+		QObject::connect(ui.buttonConfigure, SIGNAL(clicked()),
+										 this, SLOT(demoSquares()));
+		// When palette processes squares, we want to call the ShowObjects Slot of iCubes
+		QObject::connect(this->palette, SIGNAL(SquaresProcessed(const Image**, int)),
+										 this, SLOT(ShowObjects(const Image**, int)));
 
-	QObject::connect(ui.buttonConfigure, SIGNAL (clicked()),
-						this, SLOT (ShowConfigureDialog()));
+		QObject::connect(&m_videoStreamProcessor, SIGNAL (SquaresRecognized (const Square**, int)),
+										 &m_objectProcessor, SLOT (ProcessSquares (const Square**, int)));
+
+	//QObject::connect(ui.buttonConfigure, SIGNAL (clicked()),
+	//					this, SLOT (ShowConfigureDialog()));
+
+
 
 	int webCamId = 1;
 	int fps = 30;
@@ -29,14 +43,25 @@ iCubes::iCubes(QWidget *parent)
 		labels[i] = label;
 	}
 
-	/*QTimer *timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(updatePos()));
-	timer->start(100);
-    */
 
-    ///
 	QObject::connect(&m_objectProcessor, SIGNAL (SquaresProcessed (const Image**, int)),
 						this, SLOT (ShowObjects (const Image**, int)));
+}
+
+void iCubes::demoSquares() {
+	CvPoint p1 = cvPoint(30, 4);
+	Square *sq1 = new Square(1, p1, 100, 6);
+
+	CvPoint p2 = cvPoint(50, 4);
+	Square *sq2 = new Square(2, p2, 50, 6);
+
+	CvPoint p3 = cvPoint(100, 4);
+	Square *sq3 = new Square(3, p3, 100, 6);
+
+	Square *squares[3] = {sq1, sq2, sq3};
+
+	this->palette->ProcessSquares((const Square **)squares, 3);
+
 }
 
 void iCubes::updatePos() {

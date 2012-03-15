@@ -26,8 +26,7 @@ class ColorPalette : public QObject
 		~ColorPalette();
 
 	public slots:
-		void ProcessSquares (const Square**, int size);
-
+		void ProcessSquares (const Square**, size_t size);
 	signals:
 		void SquaresProcessed (const Image**, int size);
 

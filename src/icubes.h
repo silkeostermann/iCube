@@ -20,17 +20,19 @@ class iCubes : public QMainWindow
 	public slots:
 		void ShowObjects (const Image**, int);
 
+		void demoSquares();
 		void updatePos();
 
 		void ShowConfigureDialog ();
 
 	private:
-		const static int SIZE = 2;
+		const static int SIZE = 6;
 
 		Ui::iCubesClass ui;
 
 		FrameProcessor m_videoStreamProcessor;
 		BinaryMath m_objectProcessor;
+		ColorPalette *palette;
 		QLabel *labels[SIZE];
 
 };
