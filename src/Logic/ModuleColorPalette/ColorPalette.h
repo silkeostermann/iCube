@@ -1,6 +1,7 @@
 #ifndef OBJECT_PROCESSOR_H
 #define OBJECT_PROCESSOR_H
 
+#include <QtGui/QImage>
 #include "../../Recognition/Square.h"
 #include "../Image.h"
 #include <qobject.h>
@@ -13,14 +14,22 @@ class ColorPalette : public QObject
 {
 	Q_OBJECT
 
+	private:
+		QImage *interface;
+		QImage *ball;
+		QImage *redbar;
+		QImage *greenbar;
+		QImage *bluebar;
+
 	public:
-		~ColorPalette ();
+		ColorPalette();
+		~ColorPalette();
 
 	public slots:
-		void ProcessSquares (const Square**, int);
+		void ProcessSquares (const Square**, size_t size);
 
 	signals:
-		void SquaresProcessed (const Image**, int);
+		void SquaresProcessed (const Image**, int size);
 
 };
 

@@ -2,22 +2,23 @@
 #define SQUARE_H
 
 #include "opencv/highgui.h"
-#include <qobject.h>
 
 //---------------------------------------------------------------
 // Represents physical quadrilateral and its properties.
 //---------------------------------------------------------------
 
-class Square : public QObject
+class Square
 {
-	Q_OBJECT
+	int id;
+	CvPoint centerCoordinates;
+	int width;
+	int height;
 
 	public:
-		Square (int id, const CvPoint& centerCoordinates, int width, int height);
-
-		CvPoint centerCoordinates;
+		Square (int id, const CvPoint &centerCoordinates, int width, int height);
 
 		int GetId () const;
+		CvPoint GetCenterCoordinates () const;
 		int GetWidth () const;
 		int GetHeight () const;
 
