@@ -7,6 +7,7 @@
 #include "Logic/ModuleBinaryMath/BinaryMath.h"
 #include "Logic/ModuleColorPalette/ColorPalette.h"
 #include <QtGui/QMainWindow>
+#include <QLabel>
 #include "ui_icubes.h"
 
 class iCubes : public QMainWindow
@@ -20,17 +21,19 @@ class iCubes : public QMainWindow
 	public slots:
 		void ShowObjects (const Image**, int);
 
+		void demoSquares();
 		void updatePos();
 
 		void ShowConfigureDialog ();
 
 	private:
-		const static int SIZE = 2;
+		const static int SIZE = 6;
 
 		Ui::iCubesClass ui;
 
 		FrameProcessor m_videoStreamProcessor;
 		BinaryMath m_objectProcessor;
+		ColorPalette *palette;
 		QLabel *labels[SIZE];
 
 };
