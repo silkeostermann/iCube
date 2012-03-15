@@ -87,33 +87,16 @@ void ColorPalette::ProcessSquares (const Square **recognizedSquares, int size)
 	QColor *color = new QColor(redAmount, greenAmount, blueAmount, 255);
 	printf("Composing the color: [%d, %d, %d] => %lu\n", redAmount, greenAmount, blueAmount, color->rgb());
 
-	// Prepare the image and painter
-	//QImage *image = new QImage(*this->interface);
-	//QPainter *painter = new QPainter(image);
+	QImage redBarCopy = this->redbar->copy(QRect(0, 0, redWidth+10, 20));
+	Image *redbarimg = new Image(&redBarCopy, redbarposition);
+	QImage greenBarCopy = this->greenbar->copy(QRect(0, 0, greenWidth+10, 20));
+	Image *greenbarimg = new Image(&greenBarCopy, greenbarposition);
+	QImage blueBarCopy = this->bluebar->copy(QRect(0, 0, blueWidth+10, 20));
+	Image *bluebarimg = new Image(&blueBarCopy, bluebarposition);
 
-	Image *redbarimg = new Image(this->redbar->copy(0, 0, redWidth+10, 20),redbarposition);
-	Image *greenbarimg = new Image(this->greenbar->copy(0, 0, greenWidth+10, 20),greenbarposition);
-	Image *bluebarimg = new Image(this->bluebar->copy(0, 0, blueWidth+10, 20),bluebarposition);
-
-	Image *sliderimgred = new Image(*this->ball, redbarslider);
-	Image *sliderimggreen = new Image(*this->ball, greenbarslider);
-	Image *sliderimgblue = new Image(*this->ball, bluebarslider);
-
-	//Draw the section of a bar we need for each color
-	//painter->drawImage(60, 185, (this->redbar->copy(0, 0, redWidth+10, 20)));
-//	painter->drawImage(60, 267, (this->greenbar->copy(0, 0, greenWidth+10, 20)));
-//	painter->drawImage(60, 347, (this->bluebar->copy(0, 0, blueWidth+10, 20)));
-
-	// Draw ball for each color
-//	painter->drawImage(redWidth+60, 180, *this->ball);
-//	painter->drawImage(greenWidth+60, 262, *this->ball);
-//	painter->drawImage(blueWidth+60, 342, *this->ball);
-
-	// Draw the chosen color
-//	painter->fillRect(62, 445, 517, 106, color->rgb());
-
-	// Save the image
-	//image->save("test.png");
+	Image *sliderimgred = new Image(this->ball, redbarslider);
+	Image *sliderimggreen = new Image(this->ball, greenbarslider);
+	Image *sliderimgblue = new Image(this->ball, bluebarslider);
 
 	const Image *images[6];
 	images[0] = redbarimg;

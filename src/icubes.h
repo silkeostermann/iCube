@@ -7,6 +7,7 @@
 #include "Logic/ModuleBinaryMath/BinaryMath.h"
 #include "Logic/ModuleColorPalette/ColorPalette.h"
 #include <QtGui/QMainWindow>
+#include <QLabel>
 #include "ui_icubes.h"
 
 class iCubes : public QMainWindow

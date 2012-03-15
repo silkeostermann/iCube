@@ -14,10 +14,10 @@ class Image : public QObject
 	Q_OBJECT
 
 	public:
-		Image (QImage img, const QPoint& imgRelativeCoordinates);
+		Image (QImage *img, const QPoint& imgRelativeCoordinates);
 
 		QPoint imageRelativeCoordinates;
-		QImage image;
+		QImage *image;
 
 		~Image ();
 };

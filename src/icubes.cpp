@@ -65,8 +65,8 @@ void iCubes::demoSquares() {
 }
 
 void iCubes::updatePos() {
-
-	QImage *myImage = new QImage();
+	/*
+		QImage *myImage = new QImage();
 		myImage->load("/home/user/Desktop/qt-logo.png");
 		QImage img2 = myImage->scaled(100, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
@@ -74,6 +74,7 @@ void iCubes::updatePos() {
 		imgArray[0] = new Image(img2, QPoint(10, 50));
 		imgArray[1] = new Image(img2, QPoint(10, 80));
 		ShowObjects(imgArray, SIZE);
+	*/
 }
 
 //---------------------------------------------------------------
@@ -85,15 +86,19 @@ void iCubes::ShowObjects (const Image** processedSquares, int count)
 	// NOTE: Find out if it is safe to change GUI elements from invoked signal.
 	// NOTE: It might be required to use InvokeMethod ()
 
+	printf("Showing %d objects.\n", count);
+
 	for (int i = 0; i < count; i++) {
 		const Image * img = processedSquares[i];
 		int xpos = img->imageRelativeCoordinates.x() * ui.groupBox->width()
 				/ 100.0;
 		int ypos = img->imageRelativeCoordinates.y()
 				* ui.groupBox->height() / 100.0;
+		printf("Moving object to [%d, %d]\n", xpos, ypos);
 		labels[i]->move(xpos, ypos);
-		labels[i]->resize(img->image.width(), img->image.height());
-		labels[i]->setPixmap(QPixmap::fromImage(img->image));
+		labels[i]->resize(img->image->width(), img->image->height());
+		printf("Image size: %dx%d\n", img->image->width(), img->image->height());
+		labels[i]->setPixmap(QPixmap::fromImage(*(img->image)));
 		labels[i]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		labels[i]->setAlignment(Qt::AlignCenter);
 	}

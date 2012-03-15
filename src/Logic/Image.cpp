@@ -12,9 +12,9 @@
 // Initializes members.
 //---------------------------------------------------------------
 
-Image::Image (QImage image, const QPoint& imgRelativeCoordinates)
+Image::Image (QImage *image, const QPoint& imgRelativeCoordinates)
 {
-	image = image;
+	this->image = image;
 	imageRelativeCoordinates = imgRelativeCoordinates;
 }
 
