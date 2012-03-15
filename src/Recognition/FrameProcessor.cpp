@@ -30,6 +30,11 @@ void FrameProcessor::EndRead ()
 }
 
 
+void FrameProcessor::run ()
+{
+}
+
+
 //---------------------------------------------------------------
 // Destructor.
 // Releases used resources.

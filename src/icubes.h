@@ -3,12 +3,11 @@
 
 #include "Recognition/FrameProcessor.h"
 #include "Recognition/Square.h"
+#include "Logic/Image.h"
 #include "Logic/ModuleBinaryMath/BinaryMath.h"
 #include "Logic/ModuleColorPalette/ColorPalette.h"
 #include <QtGui/QMainWindow>
 #include "ui_icubes.h"
-#include <vector>
-using namespace std;
 
 class iCubes : public QMainWindow
 {
@@ -19,13 +18,21 @@ class iCubes : public QMainWindow
 		~iCubes();
 
 	public slots:
-		void ShowObjects (const vector*<Image*> processedQuadrilaterals);
+		void ShowObjects (const Image**, int);
+
+		void updatePos();
+
+		void ShowConfigureDialog ();
 
 	private:
+		const static int SIZE = 2;
+
 		Ui::iCubesClass ui;
 
 		FrameProcessor m_videoStreamProcessor;
 		BinaryMath m_objectProcessor;
+		QLabel *labels[SIZE];
+
 };
 
 #endif // ICUBES_H

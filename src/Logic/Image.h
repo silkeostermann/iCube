@@ -3,18 +3,20 @@
 
 #include <qimage.h>
 #include <qpoint.h>
-#include <qstring.h>
+#include <qobject.h>
 
 //---------------------------------------------------------------
 // Represents object defined by logic
 //---------------------------------------------------------------
 
-class Image
+class Image : public QObject
 {
-	public:
-		Image (QImage image, const QPoint& imageRelativeCoordinates);
+	Q_OBJECT
 
-		QPoint GetImageRelativeCoordinates () const;
+	public:
+		Image (QImage img, const QPoint& imgRelativeCoordinates);
+
+		QPoint imageRelativeCoordinates;
 		QImage image;
 
 		~Image ();
