@@ -90,6 +90,7 @@ void ColorPalette::ProcessSquares (const Square **recognizedSquares, int size)
 	QImage *rgbcolor = new QImage(100,100,QImage::Format_RGB16);
 	rgbcolor->fill(color->rgb());
 	Image *rgbimage = new Image(rgbcolor, QPoint(270,250));
+	delete color;
 
 	QImage redBarCopy = this->redbar->copy(QRect(0, 0, redWidth+10, 20));
 	Image *redbarimg = new Image(&redBarCopy, redbarposition);
@@ -114,6 +115,17 @@ void ColorPalette::ProcessSquares (const Square **recognizedSquares, int size)
 	images[6] = rgbimage;
 
 	SquaresProcessed(images, 7);
+
+	delete rgbcolor;
+	delete rgbimage;
+	delete redbarimg;
+	delete greenbarimg;
+	delete bluebarimg;
+	delete sliderimgred;
+	delete sliderimggreen;
+	delete sliderimgblue;
+
+	// TODO: Deallocate the QImages created with copy -- how?
 }
 
 

@@ -1,3 +1,7 @@
 debug/*
 release/*
 ui_*
+Makefile
+Makefile.debug
+Makefile.release
+iCubes
