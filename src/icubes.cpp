@@ -88,7 +88,7 @@ void iCubes::ShowObjects (const Image** processedSquares, int count)
 
 	printf("Showing %d objects.\n", count);
 
-	for (int i = 0; i < count; i++) {
+	for (int i = 0; i < count && i < SIZE; i++) {
 		const Image * img = processedSquares[i];
 		int xpos = img->imageRelativeCoordinates.x();
 		int ypos = img->imageRelativeCoordinates.y();
@@ -101,7 +101,10 @@ void iCubes::ShowObjects (const Image** processedSquares, int count)
 		labels[i]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		labels[i]->setAlignment(Qt::AlignCenter);
 	}
-
+	for(int i = count; i < SIZE; i++)
+	{
+		labels[i]->hide();
+	}
 }
 
 //---------------------------------------------------------------
