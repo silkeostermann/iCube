@@ -27,7 +27,7 @@ class iCubes : public QMainWindow
 		void ShowConfigureDialog ();
 
 	private:
-		const static int SIZE = 6;
+		const static int SIZE = 8;
 
 		Ui::iCubesClass ui;
 

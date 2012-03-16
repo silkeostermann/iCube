@@ -87,6 +87,10 @@ void ColorPalette::ProcessSquares (const Square **recognizedSquares, int size)
 	QColor *color = new QColor(redAmount, greenAmount, blueAmount, 255);
 	printf("Composing the color: [%d, %d, %d] => %lu\n", redAmount, greenAmount, blueAmount, color->rgb());
 
+	QImage *rgbcolor = new QImage(100,100,QImage::Format_RGB16);
+	rgbcolor->fill(color->rgb());
+	Image *rgbimage = new Image(rgbcolor, QPoint(270,250));
+
 	QImage redBarCopy = this->redbar->copy(QRect(0, 0, redWidth+10, 20));
 	Image *redbarimg = new Image(&redBarCopy, redbarposition);
 	QImage greenBarCopy = this->greenbar->copy(QRect(0, 0, greenWidth+10, 20));
@@ -98,15 +102,18 @@ void ColorPalette::ProcessSquares (const Square **recognizedSquares, int size)
 	Image *sliderimggreen = new Image(this->ball, greenbarslider);
 	Image *sliderimgblue = new Image(this->ball, bluebarslider);
 
-	const Image *images[6];
+
+
+	const Image *images[7];
 	images[0] = redbarimg;
 	images[1] = bluebarimg;
 	images[2] = greenbarimg;
 	images[3] = sliderimgred;
 	images[4] = sliderimggreen;
 	images[5] = sliderimgblue;
+	images[6] = rgbimage;
 
-	SquaresProcessed(images, 6);
+	SquaresProcessed(images, 7);
 }
 
 
