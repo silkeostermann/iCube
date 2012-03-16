@@ -194,6 +194,7 @@ void FrameProcessor::run ()
       sleep(1);
       continue;
     }
+
     DetectAndDrawQuads(img, cubes);		
     Square* squareArr = new Square [cubes.size()];
     
@@ -208,10 +209,9 @@ void FrameProcessor::run ()
     // QThread* previousThread = QThread::currentThread ();
     // moveToThread(this);
     
-    emit SquaresRecognized (&(cubes [0]), cubes.size());
+    emit SquaresRecognized(&(cubes[0]), cubes.size());
     
-    sleep (2000);
-    //	moveToThread(previousThread);
+    usleep(50000);
     cubes.clear();
     delete [] squareArr;
   }
