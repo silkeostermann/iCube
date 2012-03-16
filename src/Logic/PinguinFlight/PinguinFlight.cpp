@@ -18,6 +18,8 @@
 //---------------------------------------------------------------
 
 PinguinFlight::PinguinFlight() {
+  QString fileName = "./Logic/PinguinFlight/pinguin.png";
+	this->image =         new QImage(fileName);
 }
 
 void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
@@ -27,9 +29,7 @@ void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 	for (int i=0;i<size;i++) {
 		Square pinguin = recognizedSquares[i];
 		CvPoint point	= pinguin.GetCenterCoordinates();
-		QString fileName = "./Logic/PinguinFlight/pinguin.png";
-		QImage *image = new QImage(fileName);
-		Image *pinguinImage = new Image(*image, QPoint(point.x, point.y));
+		Image *pinguinImage =  new Image(*(this->image), QPoint(point.x, point.y));
 		images[i] = *pinguinImage;
 	}
 

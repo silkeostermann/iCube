@@ -14,6 +14,9 @@ class PinguinFlight : public QObject
 {
 	Q_OBJECT
 
+  private:
+    QImage *image;
+
 	public:
 		PinguinFlight();
 		~PinguinFlight();

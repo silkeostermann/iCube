@@ -174,7 +174,7 @@ FrameProcessor::~FrameProcessor ()
 void FrameProcessor::run ()
 {
   // TIP: Launch Run () method on separate thread
-  CvCapture* capture = cvCaptureFromCAM (0);
+  CvCapture* capture = cvCaptureFromCAM(0);
   // Create window to draw objects
   vector <Square> cubes;
   // Searching for cubes
@@ -202,7 +202,7 @@ void FrameProcessor::run ()
     
     emit SquaresRecognized(&(cubes[0]), cubes.size());
     
-    usleep(50000);
+    usleep(10000);
     cubes.clear();
     delete [] squareArr;
   }

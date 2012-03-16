@@ -17,8 +17,8 @@ iCubes::iCubes(QWidget *parent)
 						this, SLOT (ShowConfigureDialog()));
 
 	// Setup Color Palette
-	this->palette = new ColorPalette();
-	this->setupModule(this->palette);
+  // this->palette = new ColorPalette();
+  // this->setupModule(this->palette);
   
   // Setup Penguin Flight
   this->pinguinFlight = new PinguinFlight();
