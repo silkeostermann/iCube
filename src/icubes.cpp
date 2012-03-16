@@ -15,10 +15,8 @@ iCubes::iCubes(QWidget *parent)
 	// Setup Color Palette
 	this->palette = new ColorPalette();
 	this->setupModule(this->palette);
-
-	// Setup Color Palette
-	// -------------------
-	this->palette = new ColorPalette();
+  
+  // Setup Penguin Flight
   this->pinguinFlight = new PinguinFlight();
   this->setupModule(this->pinguinFlight);
 
