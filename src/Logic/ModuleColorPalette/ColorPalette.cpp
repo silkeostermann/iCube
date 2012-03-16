@@ -58,11 +58,9 @@ void ColorPalette::ProcessSquares (const Square **recognizedSquares, int size)
 	}
 //careful here: control repeated cubes, control not present cubes (defaulting?)
 
-
-	CvPoint bluepoint	= blue->GetCenterCoordinates();
-	CvPoint redpoint	= red->GetCenterCoordinates();
-	CvPoint greenpoint	= green->GetCenterCoordinates();
-
+	CvPoint bluepoint	  = blue  ? blue->GetCenterCoordinates()  : cvPoint(0, 0);
+	CvPoint redpoint	  = red   ? red->GetCenterCoordinates()   : cvPoint(0, 0);
+  CvPoint greenpoint  = green ? green->GetCenterCoordinates() : cvPoint(0, 0);
 
 	printf("xs of rgb: %d %d %d\n", redpoint.x, greenpoint.x, bluepoint.x);
 
