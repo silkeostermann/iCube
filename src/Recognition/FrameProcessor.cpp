@@ -135,19 +135,10 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes)
       contours = contours->h_next;
     }
   
-  //	cvShowImage("color", ret);
   cvReleaseImage(&temp);
+  cvReleaseImage(&ret);
+  cvReleaseImage(&Img);
   cvReleaseMemStorage(&storage);
-  
-  /*CvPoint pC[1];
-    pC[0].x = 5000;
-    pC[0].y = 5000;
-    
-    Square test3;
-    test3.m_width = 100;
-    test3.prostojID = 1;
-    test3.m_centerCoordinates = pC[0]; 
-    cubes.push_back(test3);*/
 }
 
 
