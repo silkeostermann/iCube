@@ -6,6 +6,7 @@
 #include "Logic/Image.h"
 #include "Logic/ModuleBinaryMath/BinaryMath.h"
 #include "Logic/ModuleColorPalette/ColorPalette.h"
+#include "Logic/PinguinFlight/PinguinFlight.h"
 #include <QtGui/QMainWindow>
 #include <QLabel>
 #include "ui_icubes.h"
@@ -16,6 +17,7 @@ class iCubes : public QMainWindow
 
 	public:
 		iCubes(QWidget *parent = 0);
+		void setupModule(QObject *module);
 		~iCubes();
 
 	public slots:
@@ -34,6 +36,7 @@ class iCubes : public QMainWindow
 		FrameProcessor m_videoStreamProcessor;
 		BinaryMath m_objectProcessor;
 		ColorPalette *palette;
+		PinguinFlight *pinguinFlight;
 		QLabel *labels[SIZE];
 
 };

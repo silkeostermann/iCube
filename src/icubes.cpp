@@ -4,48 +4,52 @@
 #include <cstdio>
 
 iCubes::iCubes(QWidget *parent)
-    : QMainWindow(parent)
+	: QMainWindow(parent)
 {
 	ui.setupUi(this);
 	setWindowTitle("iCubes");
 
-    FrameProcessor m_videoStreamProcessor;
+	FrameProcessor m_videoStreamProcessor;
+	BinaryMath m_objectProcessor;
 
-    BinaryMath m_objectProcessor;
+	// Setup Color Palette
+	this->palette = new ColorPalette();
+	this->setupModule(this->palette);
 
-		// Setup Color Palette
-		// -------------------
-		this->palette = new ColorPalette();
-		// When user clicks the 'configure' button (temp solution), the demoSquares
-		// method is called.
-		//QObject::connect(ui.buttonConfigure, SIGNAL(clicked()),
-	//									 this, SLOT(demoSquares()));
-		// When palette processes squares, we want to call the ShowObjects Slot of iCubes
-		//QObject::connect(this->palette, SIGNAL(SquaresProcessed(const Image**, int)),
-		//								 this, SLOT(ShowObjects(const Image**, int)));
-
-		QObject::connect(&m_videoStreamProcessor, SIGNAL (SquaresRecognized (const Square**, int)),
-										 &m_objectProcessor, SLOT (ProcessSquares (const Square**, int)));
+	// Setup Color Palette
+	// -------------------
+	this->palette = new ColorPalette();
+  this->pinguinFlight = new PinguinFlight();
+  this->setupModule(this->pinguinFlight);
 
 	QObject::connect(ui.buttonConfigure, SIGNAL (clicked()),
 						this, SLOT (ShowConfigureDialog()));
 
 
-
-	int webCamId = 1;
-	int fps = 30;
-	m_videoStreamProcessor.BeginRead (webCamId, fps);
-
-	////
-
+	// UI Initialization
 	for (int i = 0; i < SIZE; i++) {
 		QLabel *label = new QLabel(this);
 		labels[i] = label;
 	}
 
+	// Camera stuff
+	QObject::connect(&m_videoStreamProcessor, SIGNAL (SquaresRecognized (const Square**, int)),
+									 &m_objectProcessor, SLOT (ProcessSquares (const Square**, int)));
+	int webCamId = 1;
+	int fps = 30;
+	m_videoStreamProcessor.BeginRead (webCamId, fps);
+
+
 
 	QObject::connect(&m_objectProcessor, SIGNAL (SquaresProcessed (const Image**, int)),
-						this, SLOT (ShowObjects (const Image**, int)));
+									 this, SLOT (ShowObjects (const Image**, int)));
+}
+
+// Sets up module:
+// - connects module's `SquaresProcessed` signal to iCubes' `ShowObjects` slot
+void iCubes::setupModule(QObject *module) {
+	QObject::connect(module, SIGNAL(SquaresProcessed(const Image**, int)),
+									 this, SLOT(ShowObjects(const Image**, int)));
 }
 
 void iCubes::demoSquares() {
@@ -60,8 +64,8 @@ void iCubes::demoSquares() {
 
 	Square *squares[3] = {sq1, sq2, sq3};
 
-	this->palette->ProcessSquares((const Square **)squares, 3);
-
+	// this->palette->ProcessSquares((const Square **)squares, 3);
+	this->pinguinFlight->ProcessSquares((const Square **)squares, 3);
 }
 
 void iCubes::updatePos() {
