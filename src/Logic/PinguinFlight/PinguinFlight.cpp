@@ -24,7 +24,7 @@ PinguinFlight::PinguinFlight() {
 
 void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 {
-	printf("[PENGUIN] Processing the squares\n");
+  // printf("[PENGUIN] Processing the squares\n");
 	Image images[size];
 	for (int i=0;i<size;i++) {
 		Square pinguin = recognizedSquares[i];

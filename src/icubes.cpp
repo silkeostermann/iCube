@@ -64,17 +64,17 @@ void iCubes::ShowObjects(const Image* processedSquares, int count)
 	// NOTE: Find out if it is safe to change GUI elements from invoked signal.
 	// NOTE: It might be required to use InvokeMethod ()
 
-	printf("Showing %d objects.\n", count);
+  // printf("Showing %d objects.\n", count);
 
   for (int i = 0; i < count && i < SIZE; i++) {
   	const Image *img = &(processedSquares[i]);
   	int xpos = img->imageRelativeCoordinates.x();
   	int ypos = img->imageRelativeCoordinates.y();
 
-  	printf("Moving object to [%d, %d]\n", xpos, ypos);
+    // printf("Moving object to [%d, %d]\n", xpos, ypos);
   	labels[i]->move(xpos, ypos);
   	labels[i]->resize(img->image.width(), img->image.height());
-  	printf("Image size: %dx%d\n", img->image.width(), img->image.height());
+    // printf("Image size: %dx%d\n", img->image.width(), img->image.height());
   	labels[i]->setPixmap(QPixmap::fromImage(img->image));
   	labels[i]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   	labels[i]->setAlignment(Qt::AlignCenter);

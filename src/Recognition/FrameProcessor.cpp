@@ -191,17 +191,19 @@ void FrameProcessor::run ()
     
     for(unsigned int i = 0; i < cubes.size(); i++){
       squareArr[i] = cubes[i];
-    }		
-    
-    if (cubes.size () == 0) {
-    	continue;
     }
     
+    printf("Squares: %d\n", cubes.size());
+
+    if (cubes.size() == 0) {
+    	continue;
+    }
+
     // QThread* previousThread = QThread::currentThread ();
     // moveToThread(this);
-    
+
     emit SquaresRecognized(&(cubes[0]), cubes.size());
-    
+
     usleep(10000);
     cubes.clear();
     delete [] squareArr;
