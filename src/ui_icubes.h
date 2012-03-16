@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'icubes.ui'
 **
-** Created: Thu Mar 15 13:34:51 2012
-**      by: Qt User Interface Compiler version 4.6.2
+** Created: Fri Mar 16 08:39:10 2012
+**      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
