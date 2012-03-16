@@ -75,13 +75,13 @@ void ColorPalette::ProcessSquares (const Square **recognizedSquares, int size)
 	int blueWidth = blueAmount*492/255;
 
 
-	QPoint redbarposition		= QPoint(20,40);
-	QPoint greenbarposition		=QPoint(20,60);
-	QPoint bluebarposition		= QPoint(20,80);
+	QPoint redbarposition		= QPoint(20,100);
+	QPoint greenbarposition		=QPoint(20,150);
+	QPoint bluebarposition		= QPoint(20,200);
 
-	QPoint redbarslider		= QPoint(redpoint.x, 40);
-	QPoint greenbarslider	= QPoint(greenpoint.x, 60);
-	QPoint bluebarslider	= QPoint(bluepoint.x, 80);
+	QPoint redbarslider		= QPoint(redWidth+10, 96);
+	QPoint greenbarslider	= QPoint(greenWidth+10, 146);
+	QPoint bluebarslider	= QPoint(blueWidth+10, 196);
 
 	// Compose the color
 	QColor *color = new QColor(redAmount, greenAmount, blueAmount, 255);

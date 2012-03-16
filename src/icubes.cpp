@@ -90,10 +90,9 @@ void iCubes::ShowObjects (const Image** processedSquares, int count)
 
 	for (int i = 0; i < count; i++) {
 		const Image * img = processedSquares[i];
-		int xpos = img->imageRelativeCoordinates.x() * ui.groupBox->width()
-				/ 100.0;
-		int ypos = img->imageRelativeCoordinates.y()
-				* ui.groupBox->height() / 100.0;
+		int xpos = img->imageRelativeCoordinates.x();
+		int ypos = img->imageRelativeCoordinates.y();
+
 		printf("Moving object to [%d, %d]\n", xpos, ypos);
 		labels[i]->move(xpos, ypos);
 		labels[i]->resize(img->image->width(), img->image->height());
