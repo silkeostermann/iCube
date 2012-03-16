@@ -15,8 +15,6 @@ iCubes::iCubes(QWidget *parent)
 	}
 	QObject::connect(ui.buttonConfigure, SIGNAL (clicked()),
 						this, SLOT (ShowConfigureDialog()));
-						
-
 
 	// Setup Color Palette
 	this->palette = new ColorPalette();
@@ -61,7 +59,7 @@ void iCubes::demoSquares() {
 // Gets processed objects which to draw.
 // Expects pointer on valid processed objects array.
 //---------------------------------------------------------------
-void iCubes::ShowObjects (const Image* processedSquares, int count)
+void iCubes::ShowObjects(const Image* processedSquares, int count)
 {
 	// NOTE: Find out if it is safe to change GUI elements from invoked signal.
 	// NOTE: It might be required to use InvokeMethod ()

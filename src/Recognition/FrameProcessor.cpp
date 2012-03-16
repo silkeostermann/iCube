@@ -201,10 +201,9 @@ void FrameProcessor::run ()
       squareArr[i] = cubes[i];
     }		
     
-    if (cubes.size () == 0)
-      {
-	continue;
-      }
+    if (cubes.size () == 0) {
+    	continue;
+    }
     
     // QThread* previousThread = QThread::currentThread ();
     // moveToThread(this);
