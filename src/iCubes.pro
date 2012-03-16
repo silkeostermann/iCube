@@ -23,4 +23,7 @@ SOURCES += ConfigurationFileHelper.cpp \
     Logic/Image.cpp
 FORMS += icubes.ui \
     configure.ui
+LIBS += -lopencv_highgui \
+        -lopencv_core \
+        -lopencv_imgproc
 CONFIG += debug_and_release

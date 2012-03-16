@@ -21,10 +21,9 @@ class iCubes : public QMainWindow
 		~iCubes();
 
 	public slots:
-		void ShowObjects (const Image**, int);
+		void ShowObjects (const Image*, int);
 
 		void demoSquares();
-		void updatePos();
 
 		void ShowConfigureDialog ();
 

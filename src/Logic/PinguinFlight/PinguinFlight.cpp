@@ -20,20 +20,20 @@
 PinguinFlight::PinguinFlight() {
 }
 
-void PinguinFlight::ProcessSquares (const Square **recognizedSquares, int size)
+void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 {
 	printf("[PENGUIN] Processing the squares\n");
-	Image *images[size];
+	Image images[size];
 	for (int i=0;i<size;i++) {
-		const Square *pinguin = recognizedSquares[i];
-		CvPoint point	= pinguin->GetCenterCoordinates();
+		Square pinguin = recognizedSquares[i];
+		CvPoint point	= pinguin.GetCenterCoordinates();
 		QString fileName = "./Logic/PinguinFlight/pinguin.png";
 		QImage *image = new QImage(fileName);
-		Image *pinguinImage = new Image(image, QPoint(point.x, point.y));
-		images[i] = pinguinImage;
+		Image *pinguinImage = new Image(*image, QPoint(point.x, point.y));
+		images[i] = *pinguinImage;
 	}
 
-	SquaresProcessed((const Image **)images, size);
+	SquaresProcessed((const Image *)images, size);
 }
 
 

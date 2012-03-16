@@ -37,7 +37,7 @@ ColorPalette::ColorPalette() {
 	this->bluebar->load("Bar_Blue.png");
 }
 
-void ColorPalette::ProcessSquares (const Square **recognizedSquares, int size)
+void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 {
 	printf("Processing %d squares.\n", (int)size);
 
@@ -46,14 +46,14 @@ void ColorPalette::ProcessSquares (const Square **recognizedSquares, int size)
 	const Square *green = 0;
 
 	for (int i=0;i<size;i++) {
-		if (recognizedSquares[i]->GetId()==1) {
-			red = recognizedSquares[i];
+		if (recognizedSquares[i].GetId()==1) {
+			red = &recognizedSquares[i];
 		}
-		if (recognizedSquares[i]->GetId()==2) {
-			green = recognizedSquares[i];
+		if (recognizedSquares[i].GetId()==2) {
+			green = &recognizedSquares[i];
 		}
-		if (recognizedSquares[i]->GetId()==3) {
-			blue = recognizedSquares[i];
+		if (recognizedSquares[i].GetId()==3) {
+			blue = &recognizedSquares[i];
 		}
 	}
 //careful here: control repeated cubes, control not present cubes (defaulting?)
@@ -87,30 +87,30 @@ void ColorPalette::ProcessSquares (const Square **recognizedSquares, int size)
 
 	QImage *rgbcolor = new QImage(100,100,QImage::Format_RGB16);
 	rgbcolor->fill(color->rgb());
-	Image *rgbimage = new Image(rgbcolor, QPoint(270,250));
+	Image *rgbimage = new Image(*rgbcolor, QPoint(270,250));
 	delete color;
 
 	QImage redBarCopy = this->redbar->copy(QRect(0, 0, redWidth+10, 20));
-	Image *redbarimg = new Image(&redBarCopy, redbarposition);
+	Image *redbarimg = new Image(redBarCopy, redbarposition);
 	QImage greenBarCopy = this->greenbar->copy(QRect(0, 0, greenWidth+10, 20));
-	Image *greenbarimg = new Image(&greenBarCopy, greenbarposition);
+	Image *greenbarimg = new Image(greenBarCopy, greenbarposition);
 	QImage blueBarCopy = this->bluebar->copy(QRect(0, 0, blueWidth+10, 20));
-	Image *bluebarimg = new Image(&blueBarCopy, bluebarposition);
+	Image *bluebarimg = new Image(blueBarCopy, bluebarposition);
 
-	Image *sliderimgred = new Image(this->ball, redbarslider);
-	Image *sliderimggreen = new Image(this->ball, greenbarslider);
-	Image *sliderimgblue = new Image(this->ball, bluebarslider);
+	Image *sliderimgred = new Image(*(this->ball), redbarslider);
+	Image *sliderimggreen = new Image(*(this->ball), greenbarslider);
+	Image *sliderimgblue = new Image(*(this->ball), bluebarslider);
 
 
 
-	const Image *images[7];
-	images[0] = redbarimg;
-	images[1] = bluebarimg;
-	images[2] = greenbarimg;
-	images[3] = sliderimgred;
-	images[4] = sliderimggreen;
-	images[5] = sliderimgblue;
-	images[6] = rgbimage;
+	Image images[7];
+	images[0] = *redbarimg;
+	images[1] = *bluebarimg;
+	images[2] = *greenbarimg;
+	images[3] = *sliderimgred;
+	images[4] = *sliderimggreen;
+	images[5] = *sliderimgblue;
+	images[6] = *rgbimage;
 
 	SquaresProcessed(images, 7);
 

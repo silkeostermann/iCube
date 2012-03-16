@@ -19,10 +19,10 @@ class PinguinFlight : public QObject
 		~PinguinFlight();
 
 	public slots:
-		void ProcessSquares(const Square** squares, int size);
+		void ProcessSquares(const Square* squares, int size);
 
 	signals:
-		void SquaresProcessed(const Image **image, int size);
+		void SquaresProcessed(const Image *image, int size);
 
 };
 

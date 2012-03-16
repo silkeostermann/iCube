@@ -9,12 +9,8 @@
 
 class Square
 {
-	int id;
-	CvPoint centerCoordinates;
-	int width;
-	int height;
-
 	public:
+		Square ();
 		Square (int id, const CvPoint &centerCoordinates, int width, int height);
 
 		int GetId () const;
@@ -23,6 +19,11 @@ class Square
 		int GetHeight () const;
 
 		~Square ();
+	private:
+		int id;
+		CvPoint centerCoordinates;
+		int width;
+		int height;
 };
 
 

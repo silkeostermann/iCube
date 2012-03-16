@@ -20,30 +20,40 @@ Square::Square (int id, const CvPoint& centerCoordinates, int width, int height)
 
 //---------------------------------------------------------------
 
+Square::Square ()
+{
+	this->id = 0;
+	CvPoint centerCoordinates;
+	this->width = 0;
+	this->height = 0;
+}
+
+//---------------------------------------------------------------
+
 int Square::GetId () const
 {
-	return this->id;
+	return id;
 }
 
 //---------------------------------------------------------------
 
 CvPoint Square::GetCenterCoordinates () const
 {
-	return this->centerCoordinates;
+	return centerCoordinates;
 }
 
 //---------------------------------------------------------------
 
 int Square::GetWidth () const
 {
-	return this->width;
+	return width;
 }
 
 //---------------------------------------------------------------
 
 int Square::GetHeight () const
 {
-	return this->height;
+	return height;
 }
 
 
@@ -54,4 +64,5 @@ int Square::GetHeight () const
 
 Square::~Square ()
 {
+	
 }
