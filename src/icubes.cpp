@@ -18,17 +18,17 @@ iCubes::iCubes(QWidget *parent)
 		this->palette = new ColorPalette();
 		// When user clicks the 'configure' button (temp solution), the demoSquares
 		// method is called.
-		QObject::connect(ui.buttonConfigure, SIGNAL(clicked()),
-										 this, SLOT(demoSquares()));
+		//QObject::connect(ui.buttonConfigure, SIGNAL(clicked()),
+	//									 this, SLOT(demoSquares()));
 		// When palette processes squares, we want to call the ShowObjects Slot of iCubes
-		QObject::connect(this->palette, SIGNAL(SquaresProcessed(const Image**, int)),
-										 this, SLOT(ShowObjects(const Image**, int)));
+		//QObject::connect(this->palette, SIGNAL(SquaresProcessed(const Image**, int)),
+		//								 this, SLOT(ShowObjects(const Image**, int)));
 
 		QObject::connect(&m_videoStreamProcessor, SIGNAL (SquaresRecognized (const Square**, int)),
 										 &m_objectProcessor, SLOT (ProcessSquares (const Square**, int)));
 
-	//QObject::connect(ui.buttonConfigure, SIGNAL (clicked()),
-	//					this, SLOT (ShowConfigureDialog()));
+	QObject::connect(ui.buttonConfigure, SIGNAL (clicked()),
+						this, SLOT (ShowConfigureDialog()));
 
 
 

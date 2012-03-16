@@ -14,6 +14,7 @@ class Configure : public QDialog
 		~Configure();
 
 	public slots:
+		void ChangeFile();
 
 	private:
 
