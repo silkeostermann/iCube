@@ -5,22 +5,19 @@
 #include "../Image.h"
 #include <qobject.h>
 
-//---------------------------------------------------------------
-// Represents logic implementation, such strange name because no concrete logic chosen yet
-//---------------------------------------------------------------
-
 class BinaryMath : public QObject
 {
 	Q_OBJECT
 
 	public:
-		~BinaryMath ();
+    BinaryMath();
+		~BinaryMath();
 
 	public slots:
-		void ProcessSquares (const Square**, int);
+		void ProcessSquares(const Square* squares, int size);
 
 	signals:
-		void SquaresProcessed (const Image**, int);
+		void SquaresProcessed(const Image *image, int size);
 
 };
 
