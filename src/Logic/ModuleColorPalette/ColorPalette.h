@@ -5,6 +5,7 @@
 
 #include "../Image.h"
 #include "../../Recognition/Square.h"
+#include "ConfigurationFileHelper.h"
 
 #include <qobject.h>
 #include <QtGui/QImage>
@@ -14,6 +15,9 @@
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 #include <QtCore/QRect>
+
+#include <QList>
+#include <QStringList>
 
 //---------------------------------------------------------------
 // Represents logic implementation, such strange name because no concrete logic chosen yet
@@ -29,7 +33,14 @@ class ColorPalette : public QObject
 		QImage *m_redBar;
 		QImage *m_greenBar;
 		QImage *m_blueBar;
+		QString *palettePath;
 
+		int idRed;
+		int idGreen;
+		int idBlue;
+
+		//QList<QStringList> list;
+		ConfigurationFileHelper *config;
 	public:
 		ColorPalette();
 		~ColorPalette();

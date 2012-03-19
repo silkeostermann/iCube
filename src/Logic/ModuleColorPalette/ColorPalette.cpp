@@ -1,5 +1,8 @@
 #include "ColorPalette.h"
 
+#include <QList>
+#include <QStringList>
+
 //---------------------------------------------------------------
 // Slot to subscribe for event.
 // Expects to receive array of pointers on quadrilaterals instances which were recognized
@@ -8,21 +11,64 @@
 ColorPalette::ColorPalette() {
 	printf ("Constructing color palette.\n");
 
+	QList<QStringList> list;
+	QList<QStringList> list2;
+	list=this->config->ReadConfiguration("ColorPallete.logic");
+
+	list2=this->config->ReadConfiguration("ColorPallete.recognition");
+
 	// Prepare the UI images
+
 	m_interface = new QImage (QSize (640, 640), QImage::Format_RGB16);
-	m_interface->load ("Logic/ModuleColorPalette/interface.jpg");
 	m_ball = new QImage (QSize (52, 54), QImage::Format_RGB16);
-	m_ball->load ("Logic/ModuleColorPalette/ball.png");
-
-	// Prepare the bar images
 	m_redBar = new QImage (QSize (300, 20), QImage::Format_RGB16);
-	m_redBar->load ("Logic/ModuleColorPalette/Bar_Red.png");
-
 	m_greenBar = new QImage (QSize (300, 20), QImage::Format_RGB16);
-	m_greenBar->load ("Logic/ModuleColorPalette/Bar_Green.png");
-
 	m_blueBar = new QImage (QSize (300, 20), QImage::Format_RGB16);
-	m_blueBar->load ("Logic/ModuleColorPalette/Bar_Blue.png");
+
+	m_ball->load ("Logic/ModuleColorPalette/ball.png");
+	m_interface->load("Logic/ModuleColorPalette/interface.jpg");
+	m_redBar->load("Logic/ModuleColorPalette/Bar_Red.png");
+	m_blueBar->load ("Logic/ModuleColorPalette/Bar_Blue");
+	m_greenBar->load ("Logic/ModuleColorPalette/Bar_Green");
+
+	for (int i=0; i < list.size()-1; i++){
+		if (list.at(i).at(1)=="red") {
+
+			idRed=list.at(i).at(0).toInt();
+		}
+		if (list.at(i).at(1)=="blue") {
+
+			idBlue=list.at(i).at(0).toInt();
+		}
+		if (list.at(i).at(1)=="green") {
+
+			idGreen=list.at(i).at(0).toInt();
+		}
+
+	}
+
+	printf("idRed is %d\n",idRed);
+	printf("idGreen is %d\n",idGreen);
+	printf("idBlue is %d\n",idBlue);
+
+
+
+	for (int i=0; i < list2.size()-1; i++){
+		if (list2.at(i).at(1).toInt()==idRed) {
+			idRed=list2.at(i).at(0).toInt();
+		}
+		if (list2.at(i).at(1).toInt()==idGreen) {
+			idGreen=list2.at(i).at(0).toInt();
+		}
+		if (list2.at(i).at(1).toInt()==idBlue) {
+			idBlue=list2.at(i).at(0).toInt();
+		}
+
+	}
+		printf("idRed is %d\n",idRed);
+		printf("idGreen is %d\n",idGreen);
+		printf("idBlue is %d\n",idBlue);
+
 }
 
 //---------------------------------------------------------------
@@ -34,17 +80,24 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 	const Square* blue = NULL;
 	const Square* red = NULL;
 	const Square* green = NULL;
+	QList<QStringList> list;
+	list=this->config->ReadConfiguration("ColorPallete.recognition");
 
+	
+	
 	// TODO: Load ID from file and store as table (array)
 	for (int i=0; i < size; i++)
 	{
-		if (recognizedSquares [i].GetId () == 1)
+		//if (recognizedSquares [i].GetId () == IDforObject("red")
+		//			red = &recognizedSquares [i];
+
+		if (recognizedSquares [i].GetId () == idRed)
 			red = &recognizedSquares [i];
 
-		if (recognizedSquares [i].GetId () == 2)
+		if (recognizedSquares [i].GetId () == idGreen)
 			green = &recognizedSquares [i];
 
-		if (recognizedSquares [i].GetId () == 3)
+		if (recognizedSquares [i].GetId () == idBlue)
 			blue = &recognizedSquares[i];
 	}
 
