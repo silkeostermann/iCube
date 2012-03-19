@@ -9,10 +9,8 @@
 // Represents object defined by logic
 //---------------------------------------------------------------
 
-class Image : public QObject
+class Image
 {
-	Q_OBJECT
-
 	public:
 		Image();
 		Image(QImage img, QPoint imgRelativeCoordinates);
