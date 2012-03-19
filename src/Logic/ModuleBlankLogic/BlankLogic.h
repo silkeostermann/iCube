@@ -5,13 +5,13 @@
 #include "../Image.h"
 #include <qobject.h>
 
-class BinaryMath : public QObject
+class BlankLogic : public QObject
 {
 	Q_OBJECT
 
 	public:
-    BinaryMath();
-		~BinaryMath();
+	BlankLogic();
+		~BlankLogic();
 
 	public slots:
 		void ProcessSquares(const Square* squares, int size);
