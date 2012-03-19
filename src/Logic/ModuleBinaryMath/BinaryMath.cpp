@@ -2,10 +2,10 @@
 #include <QtGui/QColor>
 #include <QtGui/QFont>
 #include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>
 #include <math.h>
+#include <cstdio>
 
 #include "BinaryMath.h"
 
@@ -103,6 +103,83 @@ string operation_AND(string* numbers,int count)
 	return result;
 }
 
+string operation_OR(string* numbers,int count)
+{
+	if (count <= 1) return numbers[0];
+	string result = numbers[0];
+	for (int i=1; i < count; i++)
+	{
+		string next = numbers[i];
+		if (result.size() > next.size())
+		{
+			for (int j= (int)next.size(); j < (int)result.size(); j++)
+				next = '0' + next;
+		} else
+		{
+		    for (int j= (int)result.size(); j < (int)next.size(); j++)
+				result = '0' + result;
+		}
+		cout << next.size() << ' ' << result.size() << endl;
+		int k = result.size();
+		while (k > 0)
+		{
+			int temp = ((int)result[k]-48) + ((int)next[k]-48);
+			if (temp == 0)
+			{
+				result[k] = '0';
+			}
+			else
+				result[k] = '1';
+			k--;
+		}
+	}
+	return result;
+}
+
+string operation_XOR(string* numbers,int count)
+{
+	if (count <= 1) return numbers[0];
+	string result = numbers[0];
+	for (int i=1; i < count; i++)
+	{
+		string next = numbers[i];
+		if (result.size() > next.size())
+		{
+			for (int j= (int)next.size(); j < (int)result.size(); j++)
+				next = '0' + next;
+		} else
+		{
+		    for (int j= (int)result.size(); j < (int)next.size(); j++)
+				result = '0' + result;
+		}
+		cout << next.size() << ' ' << result.size() << endl;
+		int k = result.size();
+		while (k > 0)
+		{
+			int temp = ((int)result[k]-48) + ((int)next[k]-48);
+			switch (temp)
+			{
+			case 0: result[k] = '1'; break;
+			case 1: result[k] = '0'; break;
+			case 2: result[k] = '1'; break;
+			}
+			k--;
+		}
+	}
+	return result;
+}
+
+void operation_NOT(string* numbers, int count)
+{
+	for (int i=0; i< count; i++)
+		for (int j=0; j< (int)numbers[i].size(); j++)
+			if (numbers[i][j] == '0')
+			{
+				numbers[i][j] = '1';
+			}
+			else numbers[i][j] = '0';
+}
+
 int dist(Square square1, Square square2)
 {
 	CvPoint s1 = square1.GetCenterCoordinates();
@@ -155,8 +232,16 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 			OperatorSquares.push_back(square);
 	}
 	
+	// //Return if there are no number squares
+	// if (NumberSquares.size()<1)
+	// {
+	// 	cout << "No number squares..." << endl;
+	// 	return;
+	// }
+
 	// Create distance list
 	vector <A_B_distance> DistanceList;
+
 	if (NumberSquares.size() > 0) {
 		for (int i = 0; i < NumberSquares.size()-1; i++) {
 			for (int j=i+1; j < NumberSquares.size(); j++) {
@@ -237,40 +322,21 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 		cout << NumberBinStrings[i] << endl;
 	}
 
-	//Look for first Operator square and decide operation
-	char operation = 0;
-	if (OperatorSquares.size() > 0)
-	{
-		switch (OperatorSquares[0].GetId())
-		{
-		case 2:
-			operation = '+'; // Addition / Bitwise OR
-			break;
-		case 3:
-			operation = '*'; // Bitwise AND
-			break;
-		}
-	}
-	
-	//Produce results
-	string result = "";
-	if (ClusterList.size() != 0) {
-		switch (operation) {
-			case '+':
-				result = operation_addition(NumberBinStrings, (int)ClusterList.size());
-				break;
-			case '*':
-				result = operation_AND(NumberBinStrings, (int)ClusterList.size()); // Bitwise AND
-				break;
-			case 0:
-				result = NumberBinStrings[0];
-				break;
-		}
-	}
+	// Resolve operation
+	char operation = this->resolveOperation(OperatorSquares);
 	
   //Temporary config code for canvas size
   int width = 640;
   int height = 480;
+
+
+	//Produce results
+	string result = this->executeOperation(operation, NumberBinStrings, (int)ClusterList.size());
+	cout << "The result is " << result << endl;
+
+	if (operation == 'N')
+		for(int i = 0; i < (int)ClusterList.size(); i++)
+			cout << NumberBinStrings[i] << endl;
     
   // Drawing code
   QImage *qImage = new QImage(QSize(width, height), QImage::Format_RGB16);
@@ -304,6 +370,48 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
   delete painter;
 }
 
+string BinaryMath::executeOperation(char operation, string *numberStrings, int clusterSize) {
+	if (clusterSize == 0) {
+		return "NO INPUT";
+	}
+
+	switch (operation) {
+		case '+':
+			return operation_addition(numberStrings, clusterSize);
+		case '&':
+			return operation_AND(numberStrings, clusterSize);
+		case '|':
+			return operation_OR(numberStrings, clusterSize);
+		case 'X':
+			return operation_XOR(numberStrings, clusterSize);
+		case 'N':
+			operation_NOT(numberStrings, clusterSize);
+			return "!";
+		default:
+			return "NO OP";
+	}
+}
+
+char BinaryMath::resolveOperation(vector<Square> operatorSquares) {
+	if (operatorSquares.size() == 0) {
+		return 0;
+	}
+	
+	switch (operatorSquares[0].GetId()) {
+	case 2:
+		return '+'; // Addition
+	case 3:
+		return '&'; // Bitwise AND
+	case 4:
+		return '|'; // Bitwise OR
+	case 5:
+		return 'X'; // Bitwise XOR
+	case 6:
+		return 'N'; // Bitwise NOT
+	default:
+		return 0;
+	}
+}
 
 //---------------------------------------------------------------
 // Destructor.
@@ -314,7 +422,7 @@ BinaryMath::~BinaryMath ()
 {
 
 }
-
+//NumberSquares
 /*
 QPainter painter;
 painter.begin(&tmpImage);
