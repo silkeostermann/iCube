@@ -10,19 +10,19 @@ ColorPalette::ColorPalette() {
 
 	// Prepare the UI images
 	m_interface = new QImage (QSize (640, 640), QImage::Format_RGB16);
-	m_interface->load ("Logic/ModuleColorPalette/interface.jpg");
+	m_interface->load ("interface.jpg");
 	m_ball = new QImage (QSize (52, 54), QImage::Format_RGB16);
-	m_ball->load ("Logic/ModuleColorPalette/ball.png");
+	m_ball->load ("ball.png");
 
 	// Prepare the bar images
 	m_redBar = new QImage (QSize (300, 20), QImage::Format_RGB16);
-	m_redBar->load ("Logic/ModuleColorPalette/Bar_Red.png");
+	m_redBar->load ("Bar_Red.png");
 
 	m_greenBar = new QImage (QSize (300, 20), QImage::Format_RGB16);
-	m_greenBar->load ("Logic/ModuleColorPalette/Bar_Green.png");
+	m_greenBar->load ("Bar_Green.png");
 
 	m_blueBar = new QImage (QSize (300, 20), QImage::Format_RGB16);
-	m_blueBar->load ("Logic/ModuleColorPalette/Bar_Blue.png");
+	m_blueBar->load ("Bar_Blue.png");
 }
 
 //---------------------------------------------------------------
