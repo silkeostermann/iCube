@@ -5,6 +5,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QImage>
 #include <QtGui/QColor>
+#include <QtGui/QTransform>
 #include <QtCore/QRect>
 
 #include <opencv/highgui.h>
@@ -24,16 +25,19 @@ PinguinFlight::PinguinFlight()
 
 void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 {
-	printf ("[PENGUIN] Processing the squares\n");
+	//printf ("[PENGUIN] Processing the squares\n");
 
 	Image images [size];
-	for (int i=0; i < size; i++)
+	for (int i=0; i < 1; i++)
 	{
 		CvPoint centCoord = recognizedSquares [i].GetCenterCoordinates ();
-		images [i] = Image (*image, QPoint (centCoord.x, centCoord.y));
+		QTransform rot;
+		rot.rotate(recognizedSquares[i].GetAngle() - 90);
+    		QImage rotatedImage = image->transformed(rot);
+		images[i] = Image (rotatedImage, QPoint (centCoord.x, centCoord.y));
 	}
-
-	printf ("[PENGUIN] %d pinguins found.\n", size);
+	
+	//printf ("[PENGUIN] %d pinguins found.\n", size);
 	SquaresProcessed (images, size);
 }
 
