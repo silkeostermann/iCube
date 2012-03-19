@@ -20,7 +20,8 @@ SOURCES += ConfigurationFileHelper.cpp \
     icubes.cpp \
     main.cpp \
     configure.cpp \
-    Logic/Image.cpp
+    Logic/Image.cpp \
+    ModuleConfig.cpp
 FORMS += icubes.ui \
     configure.ui
 LIBS += -lopencv_highgui \
