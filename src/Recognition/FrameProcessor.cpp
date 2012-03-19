@@ -1,5 +1,58 @@
 #include "FrameProcessor.h"
 
+#define PI 3.14
+
+//-----------------------------------------------------------
+float FrameProcessor::Euclid_dist(CvPoint *p1, CvPoint *p2)
+{
+	float dx = p1->x - p2->x;
+	float dy = p1->y - p2->y;
+	return sqrt(dx*dx + dy*dy);
+}
+
+//-----------------------------------------------------------
+float FrameProcessor::GetAngle(CvPoint **pt)
+{
+	CvPoint *v1[3], *v2[3], *v3[3];
+	v1 = { pt[0], pt[1], pt[2] };
+	v2 = { pt[1], pt[2], pt[0] };
+ 	v3 = { pt[2], pt[0], pt[1] };
+
+	float max = 0;
+	int max_pos = -1;
+	for(int i = 0; i < 3; i++) 
+	{
+		float dist = Euclid_dist(v1[i], v2[i]);
+		if(dist >= max)
+		{
+			max = dist;
+			max_pos = i;
+		}
+	}
+	CvPoint center;
+	center.x = (v1[max_pos]->x + v2[max_pos]->x)/2;
+	center.y = (v1[max_pos]->y + v2[max_pos]->y)/2;
+	float angle = atan2(center.y - v3[max_pos]->y, center.x - v3[max_pos]->x);
+	angle = angle * 180 / PI;
+	if(angle < 0)
+		angle += 360;
+
+	printf("%f\n", angle);
+
+	if(angle < 45)
+		angle = 0;
+	else if(angle < 135)
+		angle = 90;
+	else if(angle < 225) 
+		angle = 180;
+	else if(angle < 315) 
+		angle = 270;
+	else angle = 0;
+
+	//printf("%f\n", angle);
+	return angle;
+}
+
 //---------------------------------------------------------------
 // Expects there are subscribers on "QuadrilateralsRecognized" signal.
 // If stream is not already opened and if it is possible to start
@@ -42,7 +95,7 @@ void FrameProcessor::run ()
     IplImage* img = cvQueryFrame (capture);
     if (!img)
     {
-      printf("Capture failed!\n");
+      //printf("Capture failed!\n");
       sleep(1);
       continue;
     }
@@ -55,7 +108,7 @@ void FrameProcessor::run ()
       squareArr [i] = cubes [i];
     }
 
-    printf("Squares recognized: %d\n", cubes.size());
+    //printf("Squares recognized: %d\n", cubes.size());
 
     if (cubes.size() == 0) {
     	continue;
@@ -74,6 +127,7 @@ void FrameProcessor::run ()
 
 void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes)
 {
+	float angle = 0.0f;
 	CvSeq* contours;
 	CvSeq* result;
 	CvMemStorage *storage = cvCreateMemStorage(0);
@@ -109,7 +163,8 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes)
 		CvPoint ptCent[1];
 		ptCent[0].x = (pt[0]->x + pt[1]->x + pt[2]->x)/3;
 		ptCent[0].y = (pt[0]->y + pt[1]->y + pt[2]->y)/3;
-		
+		//printf("(%d, %d) (%d,%d) (%d,%d)\n", pt[0]->x, pt[0]->y, pt[1]->x, pt[1]->y, pt[2]->x, pt[2]->y); 
+		angle = GetAngle(pt);
 		//cvCircle(ret, ptCent[0], 5, cvScalar(255));
 		
 		CvPoint2D32f triang;
@@ -186,7 +241,7 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes)
 	    pC[0].x = ptCent[0].x;
 	    pC[0].y = ptCent[0].y;
 	    
-	    Square test3 (countSquare, pC [0], abs(pt1[0]->x - pC[0].x) * 1.5, abs(pt1[0]->x - pC[0].x) * 1.5);
+	    Square test3 (countSquare, pC [0], abs(pt1[0]->x - pC[0].x) * 1.5, abs(pt1[0]->x - pC[0].x) * 1.5, angle);
 	    cubes.push_back(test3);
 	  }
         }
