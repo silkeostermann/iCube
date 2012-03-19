@@ -1,9 +1,13 @@
 #ifndef BINARY_MATH_H
 #define BINARY_MATH_H
 
+#include <string>
+#include <qobject.h>
+
 #include "../../Recognition/Square.h"
 #include "../Image.h"
-#include <qobject.h>
+
+using namespace std;
 
 class BinaryMath : public QObject
 {
@@ -18,6 +22,10 @@ class BinaryMath : public QObject
 
 	signals:
 		void SquaresProcessed(const Image *image, int size);
+	
+	private:
+		string executeOperation(char operation, string *numberStrings, int clusterSize);
+		char resolveOperation(vector<Square> operatorSquares);
 
 };
 
