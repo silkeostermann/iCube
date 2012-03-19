@@ -64,7 +64,6 @@ void iCubes::demoSquares() {
 //---------------------------------------------------------------
 void iCubes::ShowObjects(const Image* processedSquares, int count)
 {
-
 	for (int i = 0; i < count && i < SIZE; i++)
 	{
 		const Image *img = &(processedSquares[i]);
@@ -77,6 +76,7 @@ void iCubes::ShowObjects(const Image* processedSquares, int count)
 		m_labels [i]->setPixmap (QPixmap::fromImage(img->image));
 		m_labels [i]->setSizePolicy (QSizePolicy::Expanding, QSizePolicy::Expanding);
 		m_labels [i]->setAlignment (Qt::AlignCenter);
+		m_labels [i]->show();
 	}
 
 	for(int i = count; i < SIZE; i++)

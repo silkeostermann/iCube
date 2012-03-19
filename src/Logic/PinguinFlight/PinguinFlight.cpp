@@ -28,10 +28,8 @@ PinguinFlight::PinguinFlight()
 
 void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 {
-	//printf ("[PENGUIN] Processing the squares\n");
-
-	Image images [1];
-	for (int i=0; i < 1; i++)
+	Image *images = new Image [size];
+	for (int i=0; i < size; i++)
 	{
 		QImage *img;
 		if(recognizedSquares[i].GetAngle() == 0) {
@@ -50,8 +48,8 @@ void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 		images[i] = Image (*img, QPoint (centCoord.x, centCoord.y));
 	}
 	
-	//printf ("[PENGUIN] %d pinguins found.\n", size);
-	SquaresProcessed (images, size);
+	emit SquaresProcessed (images, size);
+	delete [] images;
 }
 
 

@@ -25,7 +25,7 @@ class FrameProcessor : public QThread
 
 		void run();
 
-		void DetectAndDrawQuads(IplImage* img, vector <Square>& squares);
+		void DetectAndDrawQuads(IplImage* img, vector <Square>& squares, CvCapture*);
 
 		~FrameProcessor ();
 
