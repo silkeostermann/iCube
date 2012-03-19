@@ -37,8 +37,6 @@ float FrameProcessor::GetAngle(CvPoint **pt)
 	if(angle < 0)
 		angle += 360;
 
-	printf("%f\n", angle);
-
 	if(angle < 45)
 		angle = 0;
 	else if(angle < 135)
@@ -49,7 +47,8 @@ float FrameProcessor::GetAngle(CvPoint **pt)
 		angle = 270;
 	else angle = 0;
 
-	//printf("%f\n", angle);
+	printf("%f\n", angle);
+
 	return angle;
 }
 
@@ -164,7 +163,6 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 		ptCent[0].x = (pt[0]->x + pt[1]->x + pt[2]->x)/3;
 		ptCent[0].y = (pt[0]->y + pt[1]->y + pt[2]->y)/3;
 		//printf("(%d, %d) (%d,%d) (%d,%d)\n", pt[0]->x, pt[0]->y, pt[1]->x, pt[1]->y, pt[2]->x, pt[2]->y); 
-		angle = GetAngle(pt);
 		//cvCircle(ret, ptCent[0], 5, cvScalar(255));
 		
 		CvPoint2D32f triang;
@@ -176,7 +174,7 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 		  //cvLine(ret, *pt[0], *pt[1], cvScalar(30, 50, 50));
 		  //cvLine(ret, *pt[1], *pt[2], cvScalar(30, 50, 50));
 		  //cvLine(ret, *pt[2], *pt[0], cvScalar(30, 50, 50));
-		  
+		  angle = GetAngle(pt);
 		}
 	      }
 	    
