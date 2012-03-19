@@ -13,10 +13,9 @@ float FrameProcessor::Euclid_dist(CvPoint *p1, CvPoint *p2)
 //-----------------------------------------------------------
 float FrameProcessor::GetAngle(CvPoint **pt)
 {
-	CvPoint *v1[3], *v2[3], *v3[3];
-	v1 = { pt[0], pt[1], pt[2] };
-	v2 = { pt[1], pt[2], pt[0] };
- 	v3 = { pt[2], pt[0], pt[1] };
+	CvPoint *v1[3] = { pt[0], pt[1], pt[2] };
+	CvPoint *v2[3] = { pt[1], pt[2], pt[0] };
+ 	CvPoint *v3[3] = { pt[2], pt[0], pt[1] };
 
 	float max = 0;
 	int max_pos = -1;
