@@ -1,12 +1,4 @@
 #include "configure.h"
-#include <QDialog>
-#include <QWidget>
-#include <QLabel>
-#include <QComboBox>
-#include <QSpinBox>
-#include "ConfigurationFileHelper.h"
-#include <QFile>
-#include <QTextStream>
 
 Configure::Configure(QWidget *parent)
     : QDialog(parent)
@@ -31,23 +23,23 @@ Configure::Configure(QWidget *parent)
 	ui.tableWidget->verticalHeader()->hide();
 	for(int row = 0; row < recognitionConfig.length(); row++)
 	{
-		QSpinBox* spinbox = new QSpinBox(ui.tableWidget);
-		QString id = recognitionConfig.at(row).at(1);
-		QString objectName;
-		spinbox->setRange(0, 20);
-		spinbox->setSingleStep(1);
-		spinbox->setValue(recognitionConfig.at(row).at(0).toInt(0, 10));
-		ui.tableWidget->setCellWidget(row, 0, spinbox);
+		m_spinbox = new QSpinBox(ui.tableWidget);
+		m_spinbox->setRange(0, 20);
+		m_spinbox->setSingleStep(1);
+		m_spinbox->setValue(recognitionConfig.at(row).at(0).toInt(0, 10));
+		ui.tableWidget->setCellWidget(row, 0, m_spinbox);
 
-		QComboBox *cbo = new QComboBox(ui.tableWidget);
-		cbo->clear();
-		cbo->insertItems(0, availableObjects);
+		m_cbo = new QComboBox(ui.tableWidget);
+		m_cbo->clear();
+		m_cbo->insertItems(0, availableObjects);
+
+		QString id = recognitionConfig.at(row).at(1);
 		for(int rowLogic = 0; rowLogic < logicConfig.length(); rowLogic++)
 		{
 			if (logicConfig.at(rowLogic).at(0) == id)
-				cbo->setCurrentIndex(rowLogic);
+				m_cbo->setCurrentIndex(rowLogic);
 		}
-		ui.tableWidget->setCellWidget(row, 1, cbo);
+		ui.tableWidget->setCellWidget(row, 1, m_cbo);
 	}
 
 	QObject::connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(ChangeFile()));
@@ -85,6 +77,7 @@ void Configure::ChangeFile()
 //------------------------------------------------
 Configure::~Configure()
 {
-
+	delete m_cbo;
+	delete m_spinbox;
 }
 

@@ -1,7 +1,5 @@
 #include "icubes.h"
-#include "configure.h"
-#include <QTimer>
-#include <cstdio>
+
 
 iCubes::iCubes(QWidget *parent)
 	: QMainWindow(parent)
@@ -12,6 +10,8 @@ iCubes::iCubes(QWidget *parent)
 	setWindowTitle("iCubes");
 	for (int i = 0; i < SIZE; i++)
 		m_labels [i] = new QLabel (this);
+
+	m_configurator = NULL;
 
 	QObject::connect (ui.buttonConfigure, SIGNAL (clicked()),
 						this, SLOT (ShowConfigureDialog()));
@@ -84,16 +84,24 @@ void iCubes::ShowObjects(const Image* processedSquares, int count)
 }
 
 //---------------------------------------------------------------
+
 void iCubes::ShowConfigureDialog ()
 {
-	Configure configure (this);
-	configure.show ();
+	if (m_configurator == NULL)
+		m_configurator = new Configure (this);
+
+	m_configurator->setModal (true);
+	m_configurator->show ();
 }
 
 //---------------------------------------------------------------
+
 iCubes::~iCubes()
 {
-	delete [] m_labels;
+	delete m_configurator;
+
+	for (int i = 0; i < SIZE; i++)
+		delete m_labels [i];
 
 	m_frameProcessor.EndRead();
 
