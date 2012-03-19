@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include <math.h>
+#include <cstdio>
 
 #include "BinaryMath.h"
 
@@ -103,6 +104,83 @@ string operation_AND(string* numbers,int count)
 	return result;
 }
 
+string operation_OR(string* numbers,int count)
+{
+	if (count <= 1) return numbers[0];
+	string result = numbers[0];
+	for (int i=1; i < count; i++)
+	{
+		string next = numbers[i];
+		if (result.size() > next.size())
+		{
+			for (int j= (int)next.size(); j < (int)result.size(); j++)
+				next = '0' + next;
+		} else
+		{
+		    for (int j= (int)result.size(); j < (int)next.size(); j++)
+				result = '0' + result;
+		}
+		cout << next.size() << ' ' << result.size() << endl;
+		int k = result.size();
+		while (k > 0)
+		{
+			int temp = ((int)result[k]-48) + ((int)next[k]-48);
+			if (temp == 0)
+			{
+				result[k] = '0';
+			}
+			else
+				result[k] = '1';
+			k--;
+		}
+	}
+	return result;
+}
+
+string operation_XOR(string* numbers,int count)
+{
+	if (count <= 1) return numbers[0];
+	string result = numbers[0];
+	for (int i=1; i < count; i++)
+	{
+		string next = numbers[i];
+		if (result.size() > next.size())
+		{
+			for (int j= (int)next.size(); j < (int)result.size(); j++)
+				next = '0' + next;
+		} else
+		{
+		    for (int j= (int)result.size(); j < (int)next.size(); j++)
+				result = '0' + result;
+		}
+		cout << next.size() << ' ' << result.size() << endl;
+		int k = result.size();
+		while (k > 0)
+		{
+			int temp = ((int)result[k]-48) + ((int)next[k]-48);
+			switch (temp)
+			{
+			case 0: result[k] = '1'; break;
+			case 1: result[k] = '0'; break;
+			case 2: result[k] = '1'; break;
+			}
+			k--;
+		}
+	}
+	return result;
+}
+
+void operation_NOT(string* numbers, int count)
+{
+	for (int i=0; i< count; i++)
+		for (int j=0; j< (int)numbers[i].size(); j++)
+			if (numbers[i][j] == '0')
+			{
+				numbers[i][j] = '1';
+			}
+			else numbers[i][j] = '0';
+}
+
 int dist(Square square1, Square square2)
 {
 	CvPoint s1 = square1.GetCenterCoordinates();
@@ -147,10 +225,17 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 			OperatorSquares.push_back(recognizedSquares[i]);
 	}
 	
+	//Return if there are no number squares
+	if (NumberSquares.size()<1)
+	{
+		cout << "No number squares..." << endl;
+		return;
+	}
+
 	// Create distance list
 	vector <A_B_distance> DistanceList;
-	for (int i=0; i < NumberSquares.size()-1; i++)
-		for (int j=i+1; j < NumberSquares.size(); j++)
+	for (int i=0; i < (int)NumberSquares.size()-1; i++)
+		for (int j=i+1; j < (int)NumberSquares.size(); j++)
 			DistanceList.push_back(A_B_distance (i,j,dist(NumberSquares[i],NumberSquares[j])));
 
 	for (int i=0;i < (int)DistanceList.size(); i++)
@@ -233,34 +318,54 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 		switch (OperatorSquares[0].GetId())
 		{
 		case 2:
-			operation = '+'; // Addition / Bitwise OR
+			operation = '+'; // Addition
 			break;
 		case 3:
-			operation = '*'; // Bitwise AND
+			operation = '&'; // Bitwise AND
+			break;
+		case 4:
+			operation = '|'; // Bitwise OR
+			break;
+		case 5:
+			operation = 'X'; // Bitwise XOR
+			break;
+		case 6:
+			operation = 'N'; // Bitwise NOT
 			break;
 		}
+
 	}
 
+
 	//Produce results
-	string result;
+	string result = NumberBinStrings[0];
+
 	switch (operation)
-		{
+	{
 		case '+':
 			result = operation_addition(NumberBinStrings,(int)ClusterList.size());
 			break;
-		case '*':
+		case '&':
 			result = operation_AND(NumberBinStrings,(int)ClusterList.size()); // Bitwise AND
 			break;
-		case 0:
-			result = NumberBinStrings[0];
+		case '|':
+			result = operation_OR(NumberBinStrings,(int)ClusterList.size()); // Bitwise OR
+			break;
+		case 'X':
+			result = operation_XOR(NumberBinStrings,(int)ClusterList.size()); // Bitwise XOR
+			break;
+		case 'N':
+			operation_NOT(NumberBinStrings,(int)ClusterList.size()); // Bitwise NOT
 			break;
 		}
+	cout << "The result is " << result << endl;
+	if (operation == 'N')
+		for(int i = 0; i < (int)ClusterList.size(); i++)
+			cout << NumberBinStrings[i] << endl;
+  //Temporary config code for drawing canvas size
 	
-	
-  //Temporary config code for canvas size
-	
-  int width = 640;
-  int height = 480;
+  int width = 100;
+  int height = 100;
     
   // Drawing code
   QImage *qImage = new QImage(QSize(width, height), QImage::Format_RGB16);
@@ -270,10 +375,11 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
   painter->setFont(QFont("Arial", 15));
   for(int i = 0; i < (int)ClusterList.size(); i++)
   {
-		int x = NumberSquares[ClusterList[i][0]].GetCenterCoordinates().x*640/100;
-		int y = NumberSquares[ClusterList[i][0]].GetCenterCoordinates().y*640/100;
-    painter->drawText(x, y, NumberBinStrings[i].c_str());
-     
+	 int x = NumberSquares[ClusterList[i][0]].GetCenterCoordinates().x*width/100;
+	 int y = NumberSquares[ClusterList[i][0]].GetCenterCoordinates().y*height/100;
+	 cout << "Relative coordinates of " << i << ". cube: " << NumberSquares[ClusterList[i][0]].GetCenterCoordinates().x << " " << NumberSquares[ClusterList[i][0]].GetCenterCoordinates().y << endl;
+	 cout << "Coordinates of " << i << ". cube: " << x << " " << y << endl;
+	 painter->drawText(x, y, NumberBinStrings[i].c_str());
   }
 
 	painter->drawText(20, 80, result.c_str());
@@ -300,7 +406,7 @@ BinaryMath::~BinaryMath ()
 {
 
 }
-
+//NumberSquares
 /*
 QPainter painter;
 painter.begin(&tmpImage);
