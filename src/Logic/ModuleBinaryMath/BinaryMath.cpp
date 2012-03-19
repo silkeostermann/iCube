@@ -123,15 +123,22 @@ BinaryMath::BinaryMath() {
 
 void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 {
-	printf("Cubes: %d\n", size);
   // Put NumberSquares and OperatorSquares into 2 separate vectors
 	//   vector <Square> testSquares;
 	//   testSquares.push_back(Square(0,cvPoint(10,20),1,1)); // 0
 	//   testSquares.push_back(Square(1,cvPoint(20,20),1,1)); // 1
 	// testSquares.push_back(Square(1,cvPoint(30,20),1,1)); // 1
 	//   testSquares.push_back(Square(2,cvPoint(40,20),1,1)); // Operator
+	
+	/*
+	size = 3;
+	Square recognizedSquares[3];
+	recognizedSquares[0] = Square(0, cvPoint(10, 20), 1, 1);
+	recognizedSquares[1] = Square(1, cvPoint(20, 20), 1, 1);
+	recognizedSquares[2] = Square(2, cvPoint(30, 20), 1, 1);
+	*/
   
-  // int NumberOfSquares = testSquares.size();
+
 	int NumberOfSquares = size; 
 	int threshold = 6;
 	
@@ -141,22 +148,27 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 	vector <Square> NumberSquares;
 	for (int i=0; i < NumberOfSquares;i++)
 	{
-		if (recognizedSquares[i].GetId() <= 1)
-			NumberSquares.push_back(recognizedSquares[i]);
+		Square square = recognizedSquares[i];
+		if (square.GetId() <= 1)
+			NumberSquares.push_back(square);
 		else
-			OperatorSquares.push_back(recognizedSquares[i]);
+			OperatorSquares.push_back(square);
 	}
 	
 	// Create distance list
 	vector <A_B_distance> DistanceList;
-	for (int i=0; i < NumberSquares.size()-1; i++)
-		for (int j=i+1; j < NumberSquares.size(); j++)
-			DistanceList.push_back(A_B_distance (i,j,dist(NumberSquares[i],NumberSquares[j])));
+	if (NumberSquares.size() > 0) {
+		for (int i = 0; i < NumberSquares.size()-1; i++) {
+			for (int j=i+1; j < NumberSquares.size(); j++) {
+				DistanceList.push_back(A_B_distance (i,j,dist(NumberSquares[i],NumberSquares[j])));
+			}
+		}
+	}
 
-	for (int i=0;i < (int)DistanceList.size(); i++)
+	for (int i=0; i < (int)DistanceList.size(); i++)
 		cout << DistanceList[i].A << ' ' <<DistanceList[i].B << ' ' << DistanceList[i].dist << endl;
 
-	sort (DistanceList.begin(), DistanceList.end(), compare);
+	sort(DistanceList.begin(), DistanceList.end(), compare);
 
 	cout << endl;
 
@@ -209,7 +221,6 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 	}
 
 	//Binary string generation
-	printf("Cluster list size: %d\n", ClusterList.size());
 	cout << "Strings:" << endl;
 	string* NumberBinStrings = new string [ClusterList.size()];
 	for(int i = 0; i < (int)ClusterList.size(); i++)
@@ -240,25 +251,24 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 			break;
 		}
 	}
-
-	//Produce results
-	string result;
-	switch (operation)
-		{
-		case '+':
-			result = operation_addition(NumberBinStrings,(int)ClusterList.size());
-			break;
-		case '*':
-			result = operation_AND(NumberBinStrings,(int)ClusterList.size()); // Bitwise AND
-			break;
-		case 0:
-			result = NumberBinStrings[0];
-			break;
-		}
 	
+	//Produce results
+	string result = "";
+	if (ClusterList.size() != 0) {
+		switch (operation) {
+			case '+':
+				result = operation_addition(NumberBinStrings, (int)ClusterList.size());
+				break;
+			case '*':
+				result = operation_AND(NumberBinStrings, (int)ClusterList.size()); // Bitwise AND
+				break;
+			case 0:
+				result = NumberBinStrings[0];
+				break;
+		}
+	}
 	
   //Temporary config code for canvas size
-	
   int width = 640;
   int height = 480;
     
@@ -267,16 +277,20 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
   qImage->fill(QColor(255,255,255).rgb());
   QPainter *painter = new QPainter(qImage);
   painter->setPen(QColor(0,0,0));
-  painter->setFont(QFont("Arial", 15));
-  for(int i = 0; i < (int)ClusterList.size(); i++)
-  {
-		int x = NumberSquares[ClusterList[i][0]].GetCenterCoordinates().x*640/100;
-		int y = NumberSquares[ClusterList[i][0]].GetCenterCoordinates().y*640/100;
+  painter->setFont(QFont("Arial", 20));
+  for(int i = 0; i < (int)ClusterList.size(); i++) {
+		int x = NumberSquares[ClusterList[i][0]].GetCenterCoordinates().x;
+		int y = 40;
     painter->drawText(x, y, NumberBinStrings[i].c_str());
-     
   }
 
-	painter->drawText(20, 80, result.c_str());
+	if (operation) {
+		char operationText[100];
+		sprintf(operationText, "%c", operation);
+		painter->drawText(20, 80, operationText);
+	}
+
+	painter->drawText(20, 120, result.c_str());
 
 	unsigned int numberOfImages = 1;
   Image images[numberOfImages];
