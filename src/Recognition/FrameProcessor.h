@@ -36,6 +36,9 @@ class FrameProcessor : public QThread
 	private:
 		int m_sleepTimeBetweenFramesMs;
 		int m_cameraId;
+
+		float Euclid_dist(CvPoint*, CvPoint*);
+		float GetAngle(CvPoint **);
 };
 
 #endif
