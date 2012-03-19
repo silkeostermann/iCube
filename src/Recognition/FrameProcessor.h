@@ -15,7 +15,6 @@ using namespace std;
 // Represents web camera stream reader, processor.
 //---------------------------------------------------------------
 
-// frame processor
 class FrameProcessor : public QThread
 {
 	Q_OBJECT
@@ -33,6 +32,10 @@ class FrameProcessor : public QThread
 	signals:
 		// squares recognized
 		void SquaresRecognized(const Square*, int);
+
+	private:
+		int m_sleepTimeBetweenFramesMs;
+		int m_cameraId;
 };
 
 #endif

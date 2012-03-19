@@ -1,39 +1,98 @@
 #include "FrameProcessor.h"
 
-
-// Here goes member definition
-
-
 //---------------------------------------------------------------
-// Expects there are subscribers on "QuadrilateralsRecognized" signal,
-// otherwise set error.
-// Gets web camera id which from which to read.
-// Gets frames per second to read.
+// Expects there are subscribers on "QuadrilateralsRecognized" signal.
 // If stream is not already opened and if it is possible to start
 // reading stream for specified camera, starts reading.
 //---------------------------------------------------------------
 
+void FrameProcessor::BeginRead (int webCamId, int fps)
+{
+	if (fps <= 0)
+		return;
+
+	if (isRunning ())
+		return;
+
+	m_cameraId = webCamId;
+	m_sleepTimeBetweenFramesMs = 1000 / fps;
+	start ();
+}
+
+
+//---------------------------------------------------------------
+// Stops reading stream if was reading.
+// Releases used resources.
+//---------------------------------------------------------------
+
+void FrameProcessor::EndRead ()
+{
+  // TIP: Close all streams, stop thread
+}
+
+//---------------------------------------------------------------
+
+void FrameProcessor::run ()
+{
+  CvCapture* capture = cvCaptureFromCAM (m_cameraId);
+  vector <Square> cubes;
+
+  while (true)
+  {
+    IplImage* img = cvQueryFrame (capture);
+    if (!img)
+    {
+      printf("Capture failed!\n");
+      sleep(1);
+      continue;
+    }
+
+    DetectAndDrawQuads (img, cubes);
+    Square* squareArr = new Square [cubes.size()];
+
+    for (unsigned int i = 0; i < cubes.size(); i++)
+    {
+      squareArr [i] = cubes [i];
+    }
+
+    printf("Squares recognized: %d\n", cubes.size());
+
+    if (cubes.size() == 0) {
+    	continue;
+    }
+
+    emit SquaresRecognized (&(cubes [0]), cubes.size ());
+    msleep (m_sleepTimeBetweenFramesMs);
+
+    cubes.clear ();
+    delete [] squareArr;
+  }
+  cvReleaseCapture (&capture);
+}
+
+//---------------------------------------------------------------
+
 void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes)
 {
-  CvSeq* contours;
-  CvSeq* result;
-  CvMemStorage *storage = cvCreateMemStorage(0);
-  
-  IplImage* ret = cvCreateImage(cvGetSize(img), 8, 3);
-  IplImage* temp = cvCreateImage(cvGetSize(img), 8, 1);
-  
-  cvCvtColor(img, temp, CV_BGR2GRAY);
-  
-  IplImage* Img = cvCreateImage (cvGetSize (img), 8, 1);
-  cvThreshold(temp, Img, 0, 255, CV_THRESH_BINARY_INV | CV_THRESH_OTSU);
-  
-  cvFindContours(Img, storage, &contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));
-  CvSeq* contours1 = contours;
-  while(contours)
+	CvSeq* contours;
+	CvSeq* result;
+	CvMemStorage *storage = cvCreateMemStorage(0);
+
+	IplImage* ret = cvCreateImage(cvGetSize(img), 8, 3);
+	IplImage* temp = cvCreateImage(cvGetSize(img), 8, 1);
+
+	cvCvtColor(img, temp, CV_BGR2GRAY);
+
+	IplImage* Img = cvCreateImage (cvGetSize (img), 8, 1);
+	cvThreshold(temp, Img, 0, 255, CV_THRESH_BINARY_INV | CV_THRESH_OTSU);
+
+	cvFindContours(Img, storage, &contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));
+	CvSeq* contours1 = contours;
+	while(contours)
     {
-      result = cvApproxPoly(contours, sizeof(CvContour), storage, CV_POLY_APPROX_DP, cvContourPerimeter(contours)*0.02, 0);
-      
-      if((result->total==4)  && (fabs(cvContourArea(result, CV_WHOLE_SEQ)) > 30) && cvCheckContourConvexity(result)) 
+		result = cvApproxPoly (contours, sizeof (CvContour), storage, CV_POLY_APPROX_DP, cvContourPerimeter (contours) * 0.02, 0);
+
+		if((result->total==4)  && (fabs(cvContourArea(result, CV_WHOLE_SEQ)) > 30) && cvCheckContourConvexity (result))
         {
 	  int countTriang = 0;   
 	  CvSeq* contours2 = contours1;
@@ -134,28 +193,11 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes)
       
       contours = contours->h_next;
     }
-  
-  cvReleaseImage(&temp);
-  cvReleaseImage(&ret);
-  cvReleaseImage(&Img);
-  cvReleaseMemStorage(&storage);
-}
 
-
-void FrameProcessor::BeginRead (int webCamId, int fps)
-{
-  start ();
-}
-
-
-//---------------------------------------------------------------
-// Stops reading stream if was reading.
-// Releases used resources.
-//---------------------------------------------------------------
-
-void FrameProcessor::EndRead ()
-{
-  // TIP: Close all streams, stop thread
+	cvReleaseImage(&temp);
+	cvReleaseImage(&ret);
+	cvReleaseImage(&Img);
+	cvReleaseMemStorage(&storage);
 }
 
 
@@ -167,46 +209,4 @@ void FrameProcessor::EndRead ()
 FrameProcessor::~FrameProcessor ()
 {
   EndRead ();
-}
-
-//---------------------------------------------------------------
-
-void FrameProcessor::run ()
-{
-  // TIP: Launch Run () method on separate thread
-  CvCapture* capture = cvCaptureFromCAM(0);
-  // Create window to draw objects
-  vector <Square> cubes;
-  // Searching for cubes
-  while (true) {
-    IplImage* img = cvQueryFrame( capture );
-    if (!img) {
-      printf("Capture failed!\n");
-      sleep(1);
-      continue;
-    }
-
-    DetectAndDrawQuads(img, cubes);		
-    Square* squareArr = new Square [cubes.size()];
-    
-    for(unsigned int i = 0; i < cubes.size(); i++){
-      squareArr[i] = cubes[i];
-    }
-    
-    printf("Squares: %d\n", cubes.size());
-
-    if (cubes.size() == 0) {
-    	continue;
-    }
-
-    // QThread* previousThread = QThread::currentThread ();
-    // moveToThread(this);
-
-    emit SquaresRecognized(&(cubes[0]), cubes.size());
-
-    usleep(10000);
-    cubes.clear();
-    delete [] squareArr;
-  }
-  cvReleaseCapture( &capture );
 }

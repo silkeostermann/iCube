@@ -17,7 +17,9 @@ class iCubes : public QMainWindow
 
 	public:
 		iCubes(QWidget *parent = 0);
-		void setupModule(QObject *module);
+
+		void setupModule (QObject *module);
+
 		~iCubes();
 
 	public slots:
@@ -32,11 +34,12 @@ class iCubes : public QMainWindow
 
 		Ui::iCubesClass ui;
 
-		FrameProcessor m_videoStreamProcessor;
-		BinaryMath m_objectProcessor;
-		ColorPalette *palette;
-		PinguinFlight *pinguinFlight;
-		QLabel *labels[SIZE];
+		FrameProcessor m_frameProcessor;
+		BinaryMath m_binMath;
+		ColorPalette m_colorPalette;
+		PinguinFlight m_pinguinFlight;
+
+		QLabel* m_labels [SIZE];
 
 };
 

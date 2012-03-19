@@ -17,23 +17,24 @@
 // Expects to receive array of pointers on quadrilaterals instances which were recognized
 //---------------------------------------------------------------
 
-PinguinFlight::PinguinFlight() {
-  QString fileName = "./Logic/PinguinFlight/pinguin.png";
-	this->image =         new QImage(fileName);
+PinguinFlight::PinguinFlight()
+{
+	this->image = new QImage ("./Logic/PinguinFlight/pinguin.png");
 }
 
 void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 {
-  // printf("[PENGUIN] Processing the squares\n");
-	Image images[size];
-	for (int i=0;i<size;i++) {
-		Square pinguin = recognizedSquares[i];
-		CvPoint point	= pinguin.GetCenterCoordinates();
-		Image *pinguinImage =  new Image(*(this->image), QPoint(point.x, point.y));
-		images[i] = *pinguinImage;
+	printf ("[PENGUIN] Processing the squares\n");
+
+	Image images [size];
+	for (int i=0; i < size; i++)
+	{
+		CvPoint centCoord = recognizedSquares [i].GetCenterCoordinates ();
+		images [i] = Image (*image, QPoint (centCoord.x, centCoord.y));
 	}
 
-	SquaresProcessed((const Image *)images, size);
+	printf ("[PENGUIN] %d pinguins found.\n", size);
+	SquaresProcessed (images, size);
 }
 
 
@@ -44,6 +45,7 @@ void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 
 PinguinFlight::~PinguinFlight ()
 {
+	delete image;
 }
 
 //void GetColor()
