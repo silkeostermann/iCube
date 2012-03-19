@@ -13,9 +13,10 @@ float FrameProcessor::Euclid_dist(CvPoint *p1, CvPoint *p2)
 //-----------------------------------------------------------
 float FrameProcessor::GetAngle(CvPoint **pt)
 {
-	CvPoint *v1[3] = { pt[0], pt[1], pt[2] };
-	CvPoint *v2[3] = { pt[1], pt[2], pt[0] };
- 	CvPoint *v3[3] = { pt[2], pt[0], pt[1] };
+	CvPoint *v1[3], *v2[3], *v3[3];
+	v1 = { pt[0], pt[1], pt[2] };
+	v2 = { pt[1], pt[2], pt[0] };
+ 	v3 = { pt[2], pt[0], pt[1] };
 
 	float max = 0;
 	int max_pos = -1;
@@ -99,7 +100,7 @@ void FrameProcessor::run ()
       continue;
     }
 
-    DetectAndDrawQuads (img, cubes);
+    DetectAndDrawQuads (img, cubes, capture);
     Square* squareArr = new Square [cubes.size()];
 
     for (unsigned int i = 0; i < cubes.size(); i++)
@@ -124,14 +125,14 @@ void FrameProcessor::run ()
 
 //---------------------------------------------------------------
 
-void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes)
+void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, CvCapture* capture)
 {
 	float angle = 0.0f;
 	CvSeq* contours;
 	CvSeq* result;
 	CvMemStorage *storage = cvCreateMemStorage(0);
 
-	IplImage* ret = cvCreateImage(cvGetSize(img), 8, 3);
+	//IplImage* ret = cvCreateImage(cvGetSize(img), 8, 3);
 	IplImage* temp = cvCreateImage(cvGetSize(img), 8, 1);
 
 	cvCvtColor(img, temp, CV_BGR2GRAY);
@@ -172,9 +173,9 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes)
 		
 		if(cvPointPolygonTest(result, triang, 0)  > 0){
 		  countTriang++;
-		  cvLine(ret, *pt[0], *pt[1], cvScalar(30, 50, 50));
-		  cvLine(ret, *pt[1], *pt[2], cvScalar(30, 50, 50));
-		  cvLine(ret, *pt[2], *pt[0], cvScalar(30, 50, 50));
+		  //cvLine(ret, *pt[0], *pt[1], cvScalar(30, 50, 50));
+		  //cvLine(ret, *pt[1], *pt[2], cvScalar(30, 50, 50));
+		  //cvLine(ret, *pt[2], *pt[0], cvScalar(30, 50, 50));
 		  
 		}
 	      }
@@ -187,10 +188,10 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes)
 	    for(int i=0;i<4;i++)
 	      pt[i] = (CvPoint*)cvGetSeqElem(result, i);
 	    
-	    cvLine(ret, *pt[0], *pt[1], cvScalar(255));
-	    cvLine(ret, *pt[1], *pt[2], cvScalar(255));
-	    cvLine(ret, *pt[2], *pt[3], cvScalar(255));
-	    cvLine(ret, *pt[3], *pt[0], cvScalar(255));
+	    //cvLine(ret, *pt[0], *pt[1], cvScalar(255));
+	    //cvLine(ret, *pt[1], *pt[2], cvScalar(255));
+	    //cvLine(ret, *pt[2], *pt[3], cvScalar(255));
+	    //cvLine(ret, *pt[3], *pt[0], cvScalar(255));
 	    
 	    CvSeq* contours3 = contours1;
 	    int countSquare = 0;
@@ -215,10 +216,10 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes)
 		  //cout << cvPointPolygonTest(result, triang, 0);
 		  if(cvPointPolygonTest(result, square, 0)  > 0){
 		    countSquare++;
-		    cvLine(ret, *pt[0], *pt[1], cvScalar(90, 50, 50));
-		    cvLine(ret, *pt[1], *pt[2], cvScalar(90, 50, 50));
-		    cvLine(ret, *pt[2], *pt[3], cvScalar(90, 50, 50));
-		    cvLine(ret, *pt[3], *pt[0], cvScalar(90, 50, 50));
+		    //cvLine(ret, *pt[0], *pt[1], cvScalar(90, 50, 50));
+		    //cvLine(ret, *pt[1], *pt[2], cvScalar(90, 50, 50));
+		    //cvLine(ret, *pt[2], *pt[3], cvScalar(90, 50, 50));
+		    //cvLine(ret, *pt[3], *pt[0], cvScalar(90, 50, 50));
 		    
 		  }
 		}
@@ -233,13 +234,21 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes)
 	    CvPoint ptCent[1];
 	    ptCent[0].x = (pt1[0]->x + pt1[1]->x + pt1[2]->x + pt1[3]->x)/4;
 	    ptCent[0].y = (pt1[0]->y + pt1[1]->y + pt1[2]->y + pt1[3]->y)/4;
-	    
-	    cvCircle(ret, ptCent[0], 5, cvScalar(255));
+	    //printf("%d %d\n", ptCent[0].x, ptCent[0].y);
+	    //cvCircle(ret, ptCent[0], 5, cvScalar(255));
 	    
 	    CvPoint pC[1];
 	    pC[0].x = ptCent[0].x;
 	    pC[0].y = ptCent[0].y;
 	    
+	    int width = (int) cvGetCaptureProperty (capture, CV_CAP_PROP_FRAME_WIDTH);
+	    int height = (int) cvGetCaptureProperty (capture, CV_CAP_PROP_FRAME_HEIGHT);
+
+	    pC[0].x = width - ptCent[0].x;
+
+	    pC[0].x = (pC[0].x * 100) / width;
+	    pC[0].y = (ptCent[0].y * 100) / height;
+
 	    Square test3 (countSquare, pC [0], abs(pt1[0]->x - pC[0].x) * 1.5, abs(pt1[0]->x - pC[0].x) * 1.5, angle);
 	    cubes.push_back(test3);
 	  }
@@ -249,7 +258,7 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes)
     }
 
 	cvReleaseImage(&temp);
-	cvReleaseImage(&ret);
+	//cvReleaseImage(&ret);
 	cvReleaseImage(&Img);
 	cvReleaseMemStorage(&storage);
 }
