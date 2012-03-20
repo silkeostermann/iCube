@@ -32,7 +32,7 @@ ColorPalette::ColorPalette() {
 
 void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 {
-	printf("Processing %d squares.\n", (int)size);
+  printf("[ColorPalette] ProcessSquares\n");
 
 	const Square* blue = NULL;
 	const Square* red = NULL;

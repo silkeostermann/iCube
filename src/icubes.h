@@ -1,6 +1,12 @@
 #ifndef ICUBES_H
 #define ICUBES_H
 
+#include <cstdio>
+#include <QLabel>
+#include <QTimer>
+#include <QHash>
+#include <QtGui/QMainWindow>
+
 #include "configure.h"
 #include "Recognition/FrameProcessor.h"
 #include "Recognition/Square.h"
@@ -8,11 +14,7 @@
 #include "Logic/ModuleBinaryMath/BinaryMath.h"
 #include "Logic/ModuleColorPalette/ColorPalette.h"
 #include "Logic/PinguinFlight/PinguinFlight.h"
-#include <QtGui/QMainWindow>
-#include <QLabel>
 #include "ui_icubes.h"
-#include <QTimer>
-#include <cstdio>
 
 class iCubes : public QMainWindow
 {
@@ -20,27 +22,31 @@ class iCubes : public QMainWindow
 
 	public:
 		iCubes(QWidget *parent = 0);
-
-		void setupModule (QObject *module);
-
 		~iCubes();
 
 	public slots:
 		void ShowObjects (const Image*, int);
-
 		void demoSquares();
-
-		void ShowConfigureDialog ();
+		void ShowConfigureDialog();
+    void changeModule(const QString &text);
 
 	private:
 		const static int SIZE = 10;
+    
+    void configureInterface();
+    void setupModules();
+    void setupModule (QObject *module);
+    void disconnectModule(QObject *module);
 
 		Ui::iCubesClass ui;
 
-		FrameProcessor m_frameProcessor;
-		BinaryMath m_binMath;
-		ColorPalette m_colorPalette;
-		PinguinFlight m_pinguinFlight;
+    QHash<QString, QObject *> modules;
+    QObject *currentModule;
+
+		FrameProcessor  m_frameProcessor;
+		BinaryMath      m_binMath;
+		ColorPalette    m_colorPalette;
+		PinguinFlight   m_pinguinFlight;
 
 		QLabel* m_labels [SIZE];
 
