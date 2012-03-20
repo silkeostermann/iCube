@@ -4,16 +4,22 @@
 iCubes::iCubes(QWidget *parent)
 	: QMainWindow(parent)
 {
-	// UI Initialization
-	ui.setupUi (this);
+  this->configureInterface();
+  this->setupModules();
+}
+
+void iCubes::configureInterface() {
+  ui.setupUi (this);
 
 	setWindowTitle("iCubes");
 	for (int i = 0; i < SIZE; i++)
 		m_labels [i] = new QLabel (this);
 
 	QObject::connect (ui.buttonConfigure, SIGNAL (clicked()),
-						this, SLOT (ShowConfigureDialog()));
-
+						        this, SLOT (ShowConfigureDialog()));
+	
+  QObject::connect(ui.moduleCombo, SIGNAL(currentIndexChanged(const QString &)),
+                   this, SLOT(changeModule(const QString &)));
 	QObject::connect (ui.StartstopButton, SIGNAL (clicked()),
 						this, SLOT (StartStop()));
 
@@ -36,11 +42,31 @@ void iCubes::StartStop()
 		ui.StartstopButton->setText(QString("Start"));	
 	}	
 }
+//------------------------------------------------------------
+void iCubes::setupModules() {
+  this->modules["BinaryMath"]    = &(this->m_binMath);
+  this->modules["ColorPalette"]  = &(this->m_colorPalette);
+  this->modules["PinguinFlight"] = &(this->m_pinguinFlight);
 
+  this->currentModule = NULL;
+  QList<QString> moduleNames = this->modules.keys();
+  ui.moduleCombo->addItem(""); // Empty item to let user select module
+  for (int i = 0; i < moduleNames.size(); i++) {
+    ui.moduleCombo->addItem(moduleNames.at(i));
+  }
+}
 
 //---------------------------------------------------------------
 // Connects module's "SquaresProcessed" signal to iCubes' "ShowObjects" slot
 //---------------------------------------------------------------
+
+void iCubes::disconnectModule(QObject *module) {
+  printf("Disconnecting module! [TODO]\n");
+  QObject::disconnect(&m_frameProcessor, SIGNAL(SquaresRecognized(const Square*, int)),
+                      module, 0);
+  QObject::disconnect(module, SIGNAL(SquaresProcessed(const Image*, int)),
+                      this, 0);
+}
 
 void iCubes::setupModule(QObject *module) {
 	QObject::connect(module, SIGNAL(SquaresProcessed(const Image*, int)),
@@ -48,6 +74,20 @@ void iCubes::setupModule(QObject *module) {
 
 	QObject::connect(&m_frameProcessor, SIGNAL(SquaresRecognized(const Square*, int)),
                    module, SLOT(ProcessSquares(const Square*, int)));
+}
+
+void iCubes::changeModule(const QString &moduleName) {
+  if (moduleName == "") return;
+
+  if (this->currentModule != NULL) {
+    this->disconnectModule(this->currentModule);
+  }
+  
+  this->currentModule = this->modules[moduleName];
+  
+  this->setupModule(this->currentModule);
+  
+  printf("Changed module to %s\n", qPrintable(moduleName));
 }
 
 //---------------------------------------------------------------
@@ -99,7 +139,7 @@ void iCubes::ShowObjects(const Image* processedSquares, int count)
 
 void iCubes::ShowConfigureDialog ()
 {
-	Configure *configurator = new Configure(this, ui.comboboxModule->currentText());
+	Configure *configurator = new Configure(this, ui.moduleCombo->currentText());
 	configurator->setModal (true);
 	configurator->show ();
 }

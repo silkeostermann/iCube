@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------
+---------------------------------------------------------------------------
 Project name: iCubes
 Developed by: 
  Alexey Buzdin
@@ -13,27 +13,29 @@ Developed by:
  Michal Puheim
  Silke Ostermann
  Seyed Ehsan Farshpour Rezaie
--------------------------------------------------------------------------------------
+---------------------------------------------------------------------------
 
 Briefly about the project:
 
-With iCubes platform you can add different properties and features to real objects 
-and interact with them in virtual space. You can "write" characters, numbers, words 
-or even chemical elements on a simple colored cube, and with help of a simple 
-web-camera, platform tracks its location. Based on a set of rules and input 
-information the cube is being transformed into an object in virtual space.
+With iCubes platform you can add different properties and features to real 
+objects and interact with them in virtual space. You can "write" characters,
+numbers, words or even chemical elements on a simple colored cube, and with
+help of a simple web-camera, platform tracks its location. Based on a set
+of rules and input information the cube is being transformed into an object
+in virtual space.
 
-The platform id design in a way that any user can add their own plug-in without
-modifying the source code of the platform
+The platform id design in a way that any user can add their own plug-in
+without modifying the source code of the platform
 
--------------------------------------------------------------------------------------
+---------------------------------------------------------------------------
 
-At program launch, ICUBES instance is created. in ICUBES class constructor there is 
-all module initialization. Recognition module routines are started by invoking 
-BEGIN_READ () which launches separate thread on which to read from video stream. 
-This is made so to separate GUI and processing routines. Signals (Events) are used
-to notify other classes about quadrilaterals recognized/processed. It is strongly
-recommended to make conversation with colleagues before extending basic interface.
+At program launch, ICUBES instance is created. in ICUBES class constructor
+there is all module initialization. Recognition module routines are started
+by invoking BEGIN_READ () which launches separate thread on which to read
+from video stream. This is made so to separate GUI and processing routines.
+Signals (Events) are used to notify other classes about quadrilaterals 
+recognized/processed. It is strongly recommended to make conversation with
+colleagues before extending basic interface.
 
 Simple process scheme:
 
@@ -43,15 +45,18 @@ App. launch:
 
 Frames processing routines:
 	1) Reading video stream on separate thread
-	2) After quadrilaterls recognized, according signal must be invoked (passing to it recognized quadrilaterals),
+	2) After quadrilaterls recognized, according signal must be invoked
+		(passing to it recognized quadrilaterals),
 	to notify other classes.
 
 Object processing routines:
-	1) After being notified about recognized quadrilaterals, start to process them according described logic.
-	2) Compute realtive size, coordinates, link object with required image to show.
-	3) Notify GUI module about processed quadrilaterals, which are now replaced with virtual objects, representing
-	physical objects.
+	1) After being notified about recognized quadrilaterals, start to
+	   process them according described logic.
+	2) Compute realtive size, coordinates, link object with required
+	   image to show.
+	3) Notify GUI module about processed quadrilaterals, which are now
+	   replaced with virtual objects, representing physical objects.
 
 Object display routines:
 	1) After being notified, start to display virtua objects one by one
--------------------------------------------------------------------------------------
+---------------------------------------------------------------------------

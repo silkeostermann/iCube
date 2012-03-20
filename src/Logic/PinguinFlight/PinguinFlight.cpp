@@ -29,6 +29,8 @@ PinguinFlight::PinguinFlight()
 void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 {
 	//printf("IN PENGUIN: %d\n", QThread::currentThreadId());
+  printf("[PinguinFlight] ProcessSquares\n");
+  
 	Image *images = new Image [size];
 	for (int i=0; i < size; i++)
 	{

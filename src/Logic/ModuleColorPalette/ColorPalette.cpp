@@ -14,7 +14,7 @@ ColorPalette::ColorPalette() {
 	this->moduleConfig = new ModuleConfig("ColorPalette");
 
 	m_interface = new QImage(QSize(345, 760), QImage::Format_RGB16);
-  m_gloss     = new QImage(QSize(521, 110), QImage::Format_RGB16);
+	m_gloss     = new QImage(QSize(521, 110), QImage::Format_RGB16);
 	m_ball      = new QImage(QSize(52, 54),   QImage::Format_RGB16);
 	m_redBar    = new QImage(QSize(300, 20),  QImage::Format_RGB16);
 	m_greenBar  = new QImage(QSize(300, 20),  QImage::Format_RGB16);
@@ -22,7 +22,7 @@ ColorPalette::ColorPalette() {
 
 	m_ball->load ("Logic/ModuleColorPalette/ball.png");
 	m_interface->load("Logic/ModuleColorPalette/interface.jpg");
-  m_gloss->load("Logic/ModuleColorPalette/gloss.png");
+	m_gloss->load("Logic/ModuleColorPalette/gloss.png");
 	m_redBar->load("Logic/ModuleColorPalette/Bar_Red.png");
 	m_blueBar->load ("Logic/ModuleColorPalette/Bar_Blue");
 	m_greenBar->load ("Logic/ModuleColorPalette/Bar_Green");
@@ -32,7 +32,7 @@ ColorPalette::ColorPalette() {
 
 void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 {
-	printf("Processing %d squares.\n", (int)size);
+  printf("[ColorPalette] ProcessSquares\n");
 
 	const Square* blue = NULL;
 	const Square* red = NULL;
@@ -58,9 +58,19 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
   int topMargin = 112;
   int barDistance = 52;
 
-	int redAmount 	= 255 * ((float)redPoint.x / 100);
-	int greenAmount	= 255 * ((float)greenPoint.x / 100);
-	int blueAmount	= 255 * ((float)bluePoint.x / 100);
+
+	int redAmount 	= (255 * ((float)redPoint.x-10)/ 83);
+	int greenAmount	= (255 * ((float)greenPoint.x-10 )/ 83);
+	int blueAmount	= (255 * ((float)bluePoint.x -10 )/ 83);
+
+
+	if (redAmount>255) redAmount=255;
+	if (greenAmount>255) greenAmount=255;
+	if (blueAmount>255) blueAmount=255;
+
+	if (redAmount<0) redAmount=0;
+	if (greenAmount<0) greenAmount=0;
+	if (blueAmount<0) blueAmount=0;
 
 	int redWidth = redAmount * 492 / 255;
 	int greenWidth = greenAmount * 492 / 255;
@@ -132,4 +142,6 @@ ColorPalette::~ColorPalette ()
 	delete m_redBar;
 	delete m_greenBar;
 	delete m_blueBar;
+	delete m_gloss;
+	delete this->moduleConfig;
 }
