@@ -38,5 +38,5 @@ QString ModuleConfig::objectById(int id) {
 }
 
 QString ModuleConfig::objectForSquare(Square *square) {
-	return this->objectByContoursCount(square->GetId());
+	return this->objectByContoursCount(square->GetContoursCount());
 }

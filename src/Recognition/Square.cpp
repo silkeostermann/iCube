@@ -8,9 +8,9 @@
 // Expects to receive valid unique identifier, quadrilateral center coordinates and size.
 // Initializes members.
 //---------------------------------------------------------------
-Square::Square (int id, const CvPoint& centerCoordinates, int width, int height)
+Square::Square (int contoursCount, const CvPoint& centerCoordinates, int width, int height)
 {
-	this->id = id;
+	this->contoursCount = contoursCount;
 	this->centerCoordinates = centerCoordinates;
 	this->width = width;
 	this->height = height;
@@ -22,9 +22,9 @@ Square::Square (int id, const CvPoint& centerCoordinates, int width, int height)
 // Expects to receive valid unique identifier, quadrilateral center coordinates and size.
 // Initializes members.
 //---------------------------------------------------------------
-Square::Square (int id, const CvPoint& centerCoordinates, int width, int height, float angle)
+Square::Square (int contoursCount, const CvPoint& centerCoordinates, int width, int height, float angle)
 {
-	this->id = id;
+	this->contoursCount = contoursCount;
 	this->centerCoordinates = centerCoordinates;
 	this->width = width;
 	this->height = height;
@@ -35,7 +35,7 @@ Square::Square (int id, const CvPoint& centerCoordinates, int width, int height,
 
 Square::Square ()
 {
-	this->id = 0;
+	this->contoursCount = 0;
 	CvPoint centerCoordinates;
 	this->width = 0;
 	this->height = 0;
@@ -44,9 +44,9 @@ Square::Square ()
 
 //---------------------------------------------------------------
 
-int Square::GetId () const
+int Square::GetContoursCount () const
 {
-	return id;
+	return contoursCount;
 }
 
 //---------------------------------------------------------------

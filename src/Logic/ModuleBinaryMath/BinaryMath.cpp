@@ -228,7 +228,7 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 	{
 		Square square = recognizedSquares[i];
 		QString objectName = this->moduleConfig->objectForSquare(&square);
-		printf("Square: %d (%s)\n", square.GetId(), qPrintable(objectName));
+		printf("Square: %d (%s)\n", square.GetContoursCount(), qPrintable(objectName));
 		if (this->isSquareNumber(&square))
 			NumberSquares.push_back(square);
 		else

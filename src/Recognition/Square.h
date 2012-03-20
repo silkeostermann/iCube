@@ -11,18 +11,18 @@ class Square
 {
 	public:
 		Square ();
-		Square (int id, const CvPoint& centerCoordinates, int width, int height);
-		Square (int id, const CvPoint &centerCoordinates, int width, int height, float angle);
+		Square (int contoursCount, const CvPoint& centerCoordinates, int width, int height);
+		Square (int contoursCount, const CvPoint &centerCoordinates, int width, int height, float angle);
 
-		int GetId () const;
-		CvPoint GetCenterCoordinates () const;
+		int GetContoursCount() const;
+		CvPoint GetCenterCoordinates() const;
 		int GetWidth () const;
 		int GetHeight () const;
 		float GetAngle () const;
 
 		~Square ();
 	private:
-		int id;
+		int contoursCount;
 		CvPoint centerCoordinates;
 		int width;
 		int height;

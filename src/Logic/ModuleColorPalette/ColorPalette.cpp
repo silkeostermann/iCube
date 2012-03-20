@@ -39,9 +39,6 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 	for (int i=0; i < size; i++)
 	{
 		Square *square = (Square *) &(recognizedSquares[i]);
-		// FIXME: We're using GetId to get number of contours. The GetId method
-		// of square should be renamed to GetContoursCount, because that's its
-		// true semantics.
 		QString objectName = this->moduleConfig->objectForSquare(square);
 
 		if (objectName == "red") 		red = square;
