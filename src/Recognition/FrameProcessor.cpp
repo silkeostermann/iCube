@@ -46,7 +46,7 @@ float FrameProcessor::GetAngle(CvPoint **pt)
 		angle = 270;
 	else angle = 0;
 
-	printf("%f\n", angle);
+	// printf("%f\n", angle);
 
 	return angle;
 }
