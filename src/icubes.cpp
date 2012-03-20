@@ -2,7 +2,11 @@
 #include <QPluginLoader>
 
 #include "icubes.h"
-#include "Logic/ModuleInterface.h"
+#include "Logic/ModuleBinaryMath/BinaryMath.h"
+#include "Logic/ModuleColorPalette/ColorPalette.h"
+#include "Logic/ModulePinguinFlight/PinguinFlight.h"
+
+#define SELECT_MODULE_STRING ""
 
 
 iCubes::iCubes(QWidget *parent)
@@ -29,43 +33,32 @@ void iCubes::configureInterface() {
 }
 
 void iCubes::setupModules() {
-  
-  // 01 Find all the module in the modules directory
-  
-  
-  QDir pluginsDir = QDir(qApp->applicationDirPath());
+  // 01 Load the static modules
+  ModuleInterface *binaryMath     = new BinaryMath();
+  ModuleInterface *colorPalette   = new ColorPalette();
+  ModuleInterface *pinguinFlight  = new PinguinFlight(); 
 
-  #if defined(Q_OS_MAC)
-      if (pluginsDir.dirName() == "MacOS") {
-          pluginsDir.cdUp();
-          pluginsDir.cdUp();
-          pluginsDir.cdUp();
-      }
-  #endif
-      pluginsDir.cd("modules");
+  this->registerModule(binaryMath);
+  this->registerModule(colorPalette);
+  this->registerModule(pinguinFlight);
   
-  foreach (QString filename, pluginsDir.entryList(QDir::Files)) {
-    printf("Looking for plugins in %s\n", qPrintable(pluginsDir.absoluteFilePath(filename)));
-    QPluginLoader loader(pluginsDir.absoluteFilePath(filename));
-    QObject *plugin = loader.instance();
-    if (plugin) {
-      printf("Found plugin in %s\n", qPrintable(filename));
-      ModuleInterface *module = qobject_cast<ModuleInterface *>(plugin);
-      printf("The module name is %s\n", qPrintable(module->moduleName()));
-      this->setupModule(module);
-    } else {
-      printf("No plugin there\n");
-    }
-  }
+  // 02 Load the dynamic modules
   
-  // this->modules["Binary Math"]    = &(this->m_binMath);
-  // this->modules["Color Palette"]  = &(this->m_colorPalette);
-  // this->modules["Pinguin Flight"] = &(this->m_pinguinFlight);
 
-  this->currentModule = NULL;
+}
 
+void iCubes::registerModule(ModuleInterface *module) {
+  QString name = module->moduleName();
+  printf("Registering module %s\n", qPrintable(name));
+  this->modules[name] = module;
+  this->updateModulesCombo();
+}
+
+void iCubes::updateModulesCombo() {
+  ui.moduleCombo->clear();
+  ui.moduleCombo->addItem(SELECT_MODULE_STRING);
+  
   QList<QString> moduleNames = this->modules.keys();
-  ui.moduleCombo->addItem(""); // Empty item to let user select module
   for (int i = 0; i < moduleNames.size(); i++) {
     ui.moduleCombo->addItem(moduleNames.at(i));
   }

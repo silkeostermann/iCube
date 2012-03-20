@@ -2,15 +2,17 @@
 #define PINGUIN_FLIGHT_H
 
 #include <QtGui/QImage>
+#include <qobject.h>
+
+#include "../ModuleInterface.h"
 #include "../../Recognition/Square.h"
 #include "../Image.h"
-#include <qobject.h>
 
 //---------------------------------------------------------------
 // Represents logic implementation, such strange name because no concrete logic chosen yet
 //---------------------------------------------------------------
 
-class PinguinFlight : public QObject
+class PinguinFlight : public ModuleInterface
 {
 	Q_OBJECT
 
@@ -20,6 +22,7 @@ class PinguinFlight : public QObject
 	public:
 		PinguinFlight();
 		~PinguinFlight();
+    QString moduleName();
 
 	public slots:
 		void ProcessSquares(const Square* squares, int size);

@@ -18,6 +18,10 @@
 // Expects to receive array of pointers on quadrilaterals instances which were recognized
 //---------------------------------------------------------------
 
+QString PinguinFlight::moduleName() {
+  return "Pinguing Flight";
+}
+
 PinguinFlight::PinguinFlight()
 {
 	penguin0 = QImage("./Logic/PinguinFlight/pinguin0.png");

@@ -4,19 +4,21 @@
 #include <string>
 #include <qobject.h>
 
+#include "../ModuleInterface.h"
 #include "../../Recognition/Square.h"
 #include "../Image.h"
 #include "ModuleConfig.h"
 
 using namespace std;
 
-class BinaryMath : public QObject
+class BinaryMath : public ModuleInterface
 {
 	Q_OBJECT
 
 	public:
     BinaryMath();
 		~BinaryMath();
+    QString moduleName();
 
 	public slots:
 		void ProcessSquares(const Square* squares, int size);

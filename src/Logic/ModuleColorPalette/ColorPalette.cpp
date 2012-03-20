@@ -8,6 +8,10 @@
 // Expects to receive array of pointers on quadrilaterals instances which were recognized
 //---------------------------------------------------------------
 
+QString ColorPalette::moduleName() {
+  return "Color Palette";
+}
+
 ColorPalette::ColorPalette() {
 	printf ("Constructing color palette.\n");
 

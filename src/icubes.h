@@ -10,6 +10,7 @@
 #include "configure.h"
 #include "Recognition/FrameProcessor.h"
 #include "Recognition/Square.h"
+#include "Logic/ModuleInterface.h"
 #include "Logic/Image.h"
 #include "ui_icubes.h"
 
@@ -31,7 +32,10 @@ class iCubes : public QMainWindow
     
     void configureInterface();
     void setupModules();
-    void setupModule (QObject *module);
+    void registerModule(ModuleInterface *module);
+    void updateModulesCombo();
+    
+    void setupModule (QObject *module); // TODO: Rename this method to connectModule
     void disconnectModule(QObject *module);
 
 		Ui::iCubesClass ui;

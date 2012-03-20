@@ -199,6 +199,10 @@ BinaryMath::BinaryMath() {
 }
 
 
+QString BinaryMath::moduleName() {
+  return "Binary Math";
+}
+
 // Constructor
 void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 {

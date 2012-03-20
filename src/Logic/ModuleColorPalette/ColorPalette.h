@@ -3,6 +3,7 @@
 
 #include <cstdio>
 
+#include "../ModuleInterface.h"
 #include "../Image.h"
 #include "../../Recognition/Square.h"
 #include "ConfigurationFileHelper.h"
@@ -24,7 +25,7 @@
 // Represents logic implementation, such strange name because no concrete logic chosen yet
 //---------------------------------------------------------------
 
-class ColorPalette : public QObject
+class ColorPalette : public ModuleInterface
 {
 	Q_OBJECT
 
@@ -42,6 +43,7 @@ class ColorPalette : public QObject
 	public:
 		ColorPalette();
 		~ColorPalette();
+    QString moduleName();
 
 	public slots:
 		void ProcessSquares (const Square*, int size);
