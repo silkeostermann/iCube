@@ -35,7 +35,7 @@ class iCubes : public QMainWindow
     void registerModule(ModuleInterface *module);
     void updateModulesCombo();
     
-    void setupModule (QObject *module); // TODO: Rename this method to connectModule
+    void connectModule(QObject *module);
     void disconnectModule(QObject *module);
 
 		Ui::iCubesClass ui;

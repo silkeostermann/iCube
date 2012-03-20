@@ -24,10 +24,10 @@ QString PinguinFlight::moduleName() {
 
 PinguinFlight::PinguinFlight()
 {
-	penguin0 = QImage("./Logic/PinguinFlight/pinguin0.png");
-	penguin90 = QImage("./Logic/PinguinFlight/pinguin90.png");
-	penguin180 = QImage("./Logic/PinguinFlight/pinguin180.png");
-	penguin270 = QImage("./Logic/PinguinFlight/pinguin270.png");
+	penguin0 = QImage("./Logic/ModulePinguinFlight/pinguin0.png");
+	penguin90 = QImage("./Logic/ModulePinguinFlight/pinguin90.png");
+	penguin180 = QImage("./Logic/ModulePinguinFlight/pinguin180.png");
+	penguin270 = QImage("./Logic/ModulePinguinFlight/pinguin270.png");
 }
 
 void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)

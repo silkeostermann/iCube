@@ -76,7 +76,7 @@ void iCubes::disconnectModule(QObject *module) {
                       this, 0);
 }
 
-void iCubes::setupModule(QObject *module) {
+void iCubes::connectModule(QObject *module) {
 	QObject::connect(module, SIGNAL(SquaresProcessed(const Image*, int)),
 									 this, SLOT(ShowObjects(const Image*, int)));
 
@@ -93,7 +93,7 @@ void iCubes::changeModule(const QString &moduleName) {
   
   this->currentModule = this->modules[moduleName];
   
-  this->setupModule(this->currentModule);
+  this->connectModule(this->currentModule);
   
   printf("Changed module to %s\n", qPrintable(moduleName));
 }
