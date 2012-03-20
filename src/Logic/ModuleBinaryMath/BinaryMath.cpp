@@ -198,6 +198,8 @@ BinaryMath::BinaryMath() {
   
 }
 
+
+// Constructor
 void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 {
   // Put NumberSquares and OperatorSquares into 2 separate vectors
@@ -215,31 +217,26 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 	recognizedSquares[2] = Square(2, cvPoint(30, 20), 1, 1);
 	*/
   
+	this->moduleConfig = new ModuleConfig("BinaryMath");
 
 	int NumberOfSquares = size; 
 	int threshold = 6;
-	
-	printf("First square: %d\n", recognizedSquares[0].GetId());
 	
 	vector <Square> OperatorSquares;
 	vector <Square> NumberSquares;
 	for (int i=0; i < NumberOfSquares;i++)
 	{
 		Square square = recognizedSquares[i];
-		if (square.GetId() <= 1)
+		QString objectName = this->moduleConfig->objectForSquare(&square);
+		printf("Square: %d (%s)\n", square.GetId(), qPrintable(objectName));
+		if (this->isSquareNumber(&square))
 			NumberSquares.push_back(square);
 		else
 			OperatorSquares.push_back(square);
 	}
-	
-	// //Return if there are no number squares
-	// if (NumberSquares.size()<1)
-	// {
-	// 	cout << "No number squares..." << endl;
-	// 	return;
-	// }
 
 	// Create distance list
+	
 	vector <A_B_distance> DistanceList;
 
 	if (NumberSquares.size() > 0) {
@@ -313,11 +310,8 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 		//string str;
 		for (int j = 0; j < (int)ClusterList[i].size(); j++)
 		{
-			if (NumberSquares[ClusterList[i][j]].GetId() == 0)
-				{
-				NumberBinStrings[i] += '0';
-				}
-			else NumberBinStrings[i] += '1';
+			Square *square = &(NumberSquares[ClusterList[i][j]]);
+			NumberBinStrings[i] += this->binNumberCharForSquare(square);
 		}
 		cout << NumberBinStrings[i] << endl;
 	}
@@ -396,20 +390,39 @@ char BinaryMath::resolveOperation(vector<Square> operatorSquares) {
 	if (operatorSquares.size() == 0) {
 		return 0;
 	}
-	
-	switch (operatorSquares[0].GetId()) {
-	case 2:
-		return '+'; // Addition
-	case 3:
-		return '&'; // Bitwise AND
-	case 4:
-		return '|'; // Bitwise OR
-	case 5:
-		return 'X'; // Bitwise XOR
-	case 6:
-		return 'N'; // Bitwise NOT
-	default:
+
+	Square *opSquare = &(operatorSquares[0]);
+	QString objectName = this->moduleConfig->objectForSquare(opSquare);
+
+	if (objectName == "plus") {
+		return '+';
+	} else if (objectName == "and") {
+		return '&';
+	}	else if (objectName == "or") {
+		return '|';
+	}	else if (objectName == "xor") {
+		return 'X';
+	} else if (objectName == "not") {
+		return 'N';
+	} else {
 		return 0;
+	}
+}
+
+bool BinaryMath::isSquareNumber(Square *square) {
+	QString objectName = this->moduleConfig->objectForSquare(square);
+	return (objectName == "0" || objectName == "1");
+}
+
+char BinaryMath::binNumberCharForSquare(Square *square) {
+	QString objectName = this->moduleConfig->objectForSquare(square);
+
+	if (objectName == "0") {
+		return '0';
+	} else if (objectName == "1") {
+		return '1';
+	} else {
+		return '0'; // TODO: Default?
 	}
 }
 

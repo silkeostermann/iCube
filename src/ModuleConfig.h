@@ -11,11 +11,13 @@
 #include <QStringList>
 #include <QHash>
 
+#include "Recognition/Square.h"
+
 class ModuleConfig {
 
 public:
 	ModuleConfig(QString module);
-	QString objectByContoursCount(int contourCount);
+	QString objectForSquare(Square *square);
 	
 private:
 	QHash<int, QString> logicDict;
@@ -23,6 +25,7 @@ private:
 	
 	void buildDictFromFile(QHash<int, QString> *dict, QString *filename);
 	QString objectById(int id);
+	QString objectByContoursCount(int contourCount);
 
 };
 

@@ -36,3 +36,7 @@ QString ModuleConfig::objectByContoursCount(int contourCount) {
 QString ModuleConfig::objectById(int id) {
 	return this->logicDict[id];
 }
+
+QString ModuleConfig::objectForSquare(Square *square) {
+	return this->objectByContoursCount(square->GetId());
+}

@@ -6,6 +6,7 @@
 
 #include "../../Recognition/Square.h"
 #include "../Image.h"
+#include "ModuleConfig.h"
 
 using namespace std;
 
@@ -26,6 +27,10 @@ class BinaryMath : public QObject
 	private:
 		string executeOperation(char operation, string *numberStrings, int clusterSize);
 		char resolveOperation(vector<Square> operatorSquares);
+		bool isSquareNumber(Square *square);
+		char binNumberCharForSquare(Square *square);
+		
+		ModuleConfig *moduleConfig;
 
 };
 
