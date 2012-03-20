@@ -7,7 +7,6 @@ iCubes::iCubes(QWidget *parent)
   this->configureInterface();
   this->setupModules();
   
-	m_configurator = NULL;
 	m_frameProcessor.BeginRead (0, 10);
 }
 
@@ -122,7 +121,7 @@ void iCubes::ShowObjects(const Image* processedSquares, int count)
 
 void iCubes::ShowConfigureDialog ()
 {
-	Configure *configurator = new Configure(this, ui.comboboxModule->currentText());
+	Configure *configurator = new Configure(this, ui.moduleCombo->currentText());
 	configurator->setModal (true);
 	configurator->show ();
 }
