@@ -1,12 +1,12 @@
 #ifndef BLANK_LOGIC_H
 #define BLANK_LOGIC_H
 
+#include <QtGui/QImage>
 #include <QObject>
 
 #include "Logic/ModuleInterface.h"
 #include "Logic/Image.h"
 #include "Recognition/Square.h"
-#include <qobject.h>
 
 class BlankLogic : public ModuleInterface
 {
