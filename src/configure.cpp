@@ -1,4 +1,5 @@
 #include "configure.h"
+#include "ModuleConfig.h"
 
 Configure::Configure(QWidget *parent, QString fname)
     : QDialog(parent)
@@ -75,6 +76,8 @@ void Configure::ChangeFile()
 		out << contour << ";" << id << "\n";
 	}	
 	file.close();
+	
+  ModuleConfig::invalidateModule(fname);
 }
 //------------------------------------------------
 Configure::~Configure()

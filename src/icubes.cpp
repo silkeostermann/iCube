@@ -43,7 +43,6 @@ void iCubes::setupModules() {
   this->registerModule(pinguinFlight);
   
   // 02 Load the dynamic modules
-  
 
 }
 

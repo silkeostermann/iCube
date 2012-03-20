@@ -23,7 +23,7 @@ class Configure : public QDialog
 	
 	public slots:
 		void ChangeFile();
-
+	
 	private:
 		QString fname;
 		Ui::ConfigureDialog ui;
