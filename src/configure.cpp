@@ -1,15 +1,19 @@
 #include "configure.h"
+#include "ModuleConfig.h"
 
-Configure::Configure(QWidget *parent)
+Configure::Configure(QWidget *parent, QString fname)
     : QDialog(parent)
 {
+	
 	ui.setupUi(this);
 	setWindowTitle("Configure bindings");
 	QStringList headers;
 	headers.append("Contour Count");
 	headers.append("Name");
-	QList<QStringList> recognitionConfig = ConfigurationFileHelper::ReadConfiguration("BinaryMath.recognition");
-	QList<QStringList> logicConfig = ConfigurationFileHelper::ReadConfiguration("BinaryMath.logic");
+	this->fname = fname;
+	printf("%s\n", fname.toAscii().data());
+	QList<QStringList> recognitionConfig = ConfigurationFileHelper::ReadConfiguration(fname + ".recognition");
+	QList<QStringList> logicConfig = ConfigurationFileHelper::ReadConfiguration(fname + ".logic");
 	QStringList availableObjects;
 
 	for(int row = 0; row < logicConfig.length(); row++)
@@ -44,12 +48,11 @@ Configure::Configure(QWidget *parent)
 
 	QObject::connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(ChangeFile()));
 }
-
+//----------------------------------------------------------------------
 void Configure::ChangeFile()
 {
-	QList<QStringList> logicConfig = ConfigurationFileHelper::ReadConfiguration("BinaryMath.logic");
-	
-	QFile file("BinaryMath.recognition");
+	QList<QStringList> logicConfig = ConfigurationFileHelper::ReadConfiguration(fname + ".logic");
+	QFile file(fname + ".recognition");
 	QTextStream out(&file);
 	QStringList listObjectsName;
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -73,6 +76,8 @@ void Configure::ChangeFile()
 		out << contour << ";" << id << "\n";
 	}	
 	file.close();
+	
+  ModuleConfig::invalidateModule(fname);
 }
 //------------------------------------------------
 Configure::~Configure()

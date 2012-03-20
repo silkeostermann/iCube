@@ -18,14 +18,14 @@ class Configure : public QDialog
     Q_OBJECT
 
 	public:
-		Configure (QWidget *parent = 0);
+		Configure (QWidget *parent, QString fname);
 		~Configure ();
-
+	
 	public slots:
 		void ChangeFile();
-
+	
 	private:
-
+		QString fname;
 		Ui::ConfigureDialog ui;
 
 		QSpinBox* m_spinbox;

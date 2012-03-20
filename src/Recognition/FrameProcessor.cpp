@@ -59,6 +59,12 @@ float FrameProcessor::GetAngle(CvPoint **pt)
 
 void FrameProcessor::BeginRead (int webCamId, int fps)
 {
+        //printf("MAIN: %d\n", QThread::currentThreadId());
+  	
+  	m_mutex.lock();
+	m_terminateRequested = false;
+  	m_mutex.unlock();
+	
 	if (fps <= 0)
 		return;
 
@@ -70,7 +76,6 @@ void FrameProcessor::BeginRead (int webCamId, int fps)
 	start ();
 }
 
-
 //---------------------------------------------------------------
 // Stops reading stream if was reading.
 // Releases used resources.
@@ -78,17 +83,20 @@ void FrameProcessor::BeginRead (int webCamId, int fps)
 
 void FrameProcessor::EndRead ()
 {
-  // TIP: Close all streams, stop thread
+  m_mutex.lock();
+  m_terminateRequested = true;
+  m_mutex.unlock();
 }
 
 //---------------------------------------------------------------
 
 void FrameProcessor::run ()
 {
+  //printf("IN RUN: %d\n", QThread::currentThreadId());
   CvCapture* capture = cvCaptureFromCAM (m_cameraId);
   vector <Square> cubes;
-
-  while (true)
+  bool running = true;
+  while (running)
   {
     IplImage* img = cvQueryFrame (capture);
     if (!img)
@@ -117,6 +125,10 @@ void FrameProcessor::run ()
 
     cubes.clear ();
     delete [] squareArr;
+    
+    m_mutex.lock();
+    running = !m_terminateRequested;
+    m_mutex.unlock(); 
   }
   cvReleaseCapture (&capture);
 }
@@ -260,13 +272,11 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 	cvReleaseMemStorage(&storage);
 }
 
-
 //---------------------------------------------------------------
 // Destructor.
 // Releases used resources.
 //---------------------------------------------------------------
-
 FrameProcessor::~FrameProcessor ()
 {
-  EndRead ();
+
 }

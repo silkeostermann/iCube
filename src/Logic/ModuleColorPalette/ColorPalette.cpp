@@ -13,14 +13,16 @@ ColorPalette::ColorPalette() {
 
 	this->moduleConfig = new ModuleConfig("ColorPalette");
 
-	m_interface = new QImage (QSize (640, 640), QImage::Format_RGB16);
-	m_ball = new QImage (QSize (52, 54), QImage::Format_RGB16);
-	m_redBar = new QImage (QSize (300, 20), QImage::Format_RGB16);
-	m_greenBar = new QImage (QSize (300, 20), QImage::Format_RGB16);
-	m_blueBar = new QImage (QSize (300, 20), QImage::Format_RGB16);
+	m_interface = new QImage(QSize(345, 760), QImage::Format_RGB16);
+	m_gloss     = new QImage(QSize(521, 110), QImage::Format_RGB16);
+	m_ball      = new QImage(QSize(52, 54),   QImage::Format_RGB16);
+	m_redBar    = new QImage(QSize(300, 20),  QImage::Format_RGB16);
+	m_greenBar  = new QImage(QSize(300, 20),  QImage::Format_RGB16);
+	m_blueBar   = new QImage(QSize(300, 20),  QImage::Format_RGB16);
 
 	m_ball->load ("Logic/ModuleColorPalette/ball.png");
 	m_interface->load("Logic/ModuleColorPalette/interface.jpg");
+	m_gloss->load("Logic/ModuleColorPalette/gloss.png");
 	m_redBar->load("Logic/ModuleColorPalette/Bar_Red.png");
 	m_blueBar->load ("Logic/ModuleColorPalette/Bar_Blue");
 	m_greenBar->load ("Logic/ModuleColorPalette/Bar_Green");
@@ -30,7 +32,7 @@ ColorPalette::ColorPalette() {
 
 void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 {
-	printf("Processing %d squares.\n", (int)size);
+  printf("[ColorPalette] ProcessSquares\n");
 
 	const Square* blue = NULL;
 	const Square* red = NULL;
@@ -45,37 +47,56 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 		if (objectName == "green") 	green = square;
 		if (objectName == "blue") 	blue = square;
 	}
-
-	CvPoint bluePoint 	= blue 	? blue->GetCenterCoordinates() 	: cvPoint(0, 0);
-	CvPoint redPoint 		= red 	? red->GetCenterCoordinates()  	: cvPoint(0, 0);
-	CvPoint greenPoint 	= green ? green->GetCenterCoordinates() : cvPoint(0, 0);
-
+	
+	CvPoint bluePoint 	= (blue   != NULL) 	? blue->GetCenterCoordinates() 	: cvPoint(0, 0);
+	CvPoint redPoint 		= (red    != NULL) 	? red->GetCenterCoordinates()  	: cvPoint(0, 0);
+	CvPoint greenPoint 	= (green  != NULL) 	? green->GetCenterCoordinates() : cvPoint(0, 0);
+	
 	printf ("Coordinates of RGB: %d %d %d\n", redPoint.x, greenPoint.x, bluePoint.x);
 
-	int redAmount 	= 255 * ((float)redPoint.x / 100);
-	int greenAmount	= 255 * ((float)greenPoint.x / 100);
-	int blueAmount	= 255 * ((float)bluePoint.x / 100);
+  int leftMargin = 140;
+  int topMargin = 112;
+  int barDistance = 52;
+
+
+	int redAmount 	= (255 * ((float)redPoint.x-10)/ 83);
+	int greenAmount	= (255 * ((float)greenPoint.x-10 )/ 83);
+	int blueAmount	= (255 * ((float)bluePoint.x -10 )/ 83);
+
+
+	if (redAmount>255) redAmount=255;
+	if (greenAmount>255) greenAmount=255;
+	if (blueAmount>255) blueAmount=255;
+
+	if (redAmount<0) redAmount=0;
+	if (greenAmount<0) greenAmount=0;
+	if (blueAmount<0) blueAmount=0;
 
 	int redWidth = redAmount * 492 / 255;
 	int greenWidth = greenAmount * 492 / 255;
 	int blueWidth = blueAmount * 492 / 255;
 
-	QPoint redbarposition = QPoint (20,100);
-	QPoint greenbarposition = QPoint (20,150);
-	QPoint bluebarposition = QPoint (20,200);
+	QPoint redbarposition   = QPoint(leftMargin, topMargin);
+	QPoint greenbarposition = QPoint(leftMargin, topMargin+barDistance);
+	QPoint bluebarposition  = QPoint(leftMargin, topMargin+barDistance*2);
 
-	QPoint redbarslider = QPoint (redWidth + 10, 96);
-	QPoint greenbarslider = QPoint (greenWidth + 10, 146);
-	QPoint bluebarslider = QPoint (blueWidth + 10, 196);
+	QPoint redbarslider = QPoint (redWidth + leftMargin, topMargin-4);
+	QPoint greenbarslider = QPoint (greenWidth + leftMargin, topMargin+barDistance-4);
+	QPoint bluebarslider = QPoint (blueWidth + leftMargin, topMargin+barDistance*2-4);
 
 	// Compose the color
-	QColor color (redAmount, greenAmount, blueAmount, 255);
-	printf("Composing the color: [%d, %d, %d] => %lu\n", redAmount, greenAmount, blueAmount, color.rgb());
+	QColor color(redAmount, greenAmount, blueAmount, 255);
+	printf("Composing the color: [%d, %d, %d] => %lu\n", redAmount, greenAmount, blueAmount, color.rgba());
 
-	QImage rgbcolor (100, 100, QImage::Format_RGB16);
-	rgbcolor.fill (color.rgb ());
-
-	Image rgbimage (rgbcolor, QPoint(270, 250));
+  // User Interface
+  
+  Image interfaceImage(*m_interface, QPoint(21, 78));
+  
+	QImage rgbcolor (521, 110, QImage::Format_RGB32);
+	rgbcolor.fill(color.rgba());
+	
+	Image rgbimage (rgbcolor, QPoint(141, 281));
+  Image glossImage(*m_gloss, QPoint(141, 281));
 
 	QImage redBarCopy = m_redBar->copy(QRect(0, 0, redWidth+10, 20));
 	Image redbarimg (redBarCopy, redbarposition);
@@ -92,16 +113,18 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 
 	// TODO: Remove variables which are copied into "images" array, so performance will increase
 
-	Image images [7];
-	images [0] = redbarimg;
-	images [1] = bluebarimg;
-	images [2] = greenbarimg;
-	images [3] = sliderimgred;
-	images [4] = sliderimggreen;
-	images [5] = sliderimgblue;
-	images [6] = rgbimage;
+  Image images [9];
+  images[0] = interfaceImage;
+  images[1] = redbarimg;
+  images[2] = bluebarimg;
+  images[3] = greenbarimg;
+  images[4] = sliderimgred;
+  images[5] = sliderimggreen;
+  images[6] = sliderimgblue;
+  images[7] = rgbimage;
+  images[8] = glossImage;
 
-	SquaresProcessed (images, 7);
+  emit SquaresProcessed(images, 9);
 
 	// TODO: Deallocate the QImages created with copy -- how?
 }
@@ -119,4 +142,6 @@ ColorPalette::~ColorPalette ()
 	delete m_redBar;
 	delete m_greenBar;
 	delete m_blueBar;
+	delete m_gloss;
+	delete this->moduleConfig;
 }
