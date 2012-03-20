@@ -14,7 +14,7 @@ ColorPalette::ColorPalette() {
 	this->moduleConfig = new ModuleConfig("ColorPalette");
 
 	m_interface = new QImage(QSize(345, 760), QImage::Format_RGB16);
-  m_gloss     = new QImage(QSize(521, 110), QImage::Format_RGB16);
+	m_gloss     = new QImage(QSize(521, 110), QImage::Format_RGB16);
 	m_ball      = new QImage(QSize(52, 54),   QImage::Format_RGB16);
 	m_redBar    = new QImage(QSize(300, 20),  QImage::Format_RGB16);
 	m_greenBar  = new QImage(QSize(300, 20),  QImage::Format_RGB16);
@@ -22,7 +22,7 @@ ColorPalette::ColorPalette() {
 
 	m_ball->load ("Logic/ModuleColorPalette/ball.png");
 	m_interface->load("Logic/ModuleColorPalette/interface.jpg");
-  m_gloss->load("Logic/ModuleColorPalette/gloss.png");
+	m_gloss->load("Logic/ModuleColorPalette/gloss.png");
 	m_redBar->load("Logic/ModuleColorPalette/Bar_Red.png");
 	m_blueBar->load ("Logic/ModuleColorPalette/Bar_Blue");
 	m_greenBar->load ("Logic/ModuleColorPalette/Bar_Green");
@@ -132,4 +132,6 @@ ColorPalette::~ColorPalette ()
 	delete m_redBar;
 	delete m_greenBar;
 	delete m_blueBar;
+	delete m_gloss;
+	delete this->moduleConfig;
 }
