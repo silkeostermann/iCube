@@ -11,9 +11,6 @@
 #include "Recognition/FrameProcessor.h"
 #include "Recognition/Square.h"
 #include "Logic/Image.h"
-#include "Logic/ModuleBinaryMath/BinaryMath.h"
-#include "Logic/ModuleColorPalette/ColorPalette.h"
-#include "Logic/PinguinFlight/PinguinFlight.h"
 #include "ui_icubes.h"
 
 class iCubes : public QMainWindow
@@ -26,7 +23,6 @@ class iCubes : public QMainWindow
 
 	public slots:
 		void ShowObjects (const Image*, int);
-		void demoSquares();
 		void ShowConfigureDialog();
     void changeModule(const QString &text);
 
@@ -44,9 +40,6 @@ class iCubes : public QMainWindow
     QObject *currentModule;
 
 		FrameProcessor  m_frameProcessor;
-		BinaryMath      m_binMath;
-		ColorPalette    m_colorPalette;
-		PinguinFlight   m_pinguinFlight;
 
 		QLabel* m_labels [SIZE];
 
