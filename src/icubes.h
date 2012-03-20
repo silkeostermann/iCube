@@ -10,6 +10,7 @@
 #include "Logic/PinguinFlight/PinguinFlight.h"
 #include <QtGui/QMainWindow>
 #include <QLabel>
+#include <QCloseEvent>
 #include "ui_icubes.h"
 #include <QTimer>
 #include <cstdio>
@@ -20,7 +21,7 @@ class iCubes : public QMainWindow
 
 	public:
 		iCubes(QWidget *parent = 0);
-
+		void closeEvent(QCloseEvent *);
 		void setupModule (QObject *module);
 
 		~iCubes();
@@ -31,6 +32,8 @@ class iCubes : public QMainWindow
 		void demoSquares();
 
 		void ShowConfigureDialog ();
+
+		void StartStop();
 
 	private:
 		const static int SIZE = 10;

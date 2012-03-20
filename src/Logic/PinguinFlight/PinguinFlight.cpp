@@ -7,7 +7,7 @@
 #include <QtGui/QColor>
 #include <QtGui/QTransform>
 #include <QtCore/QRect>
-
+#include <QThread>
 #include <opencv/highgui.h>
 
 // Here goes member definition
@@ -28,6 +28,7 @@ PinguinFlight::PinguinFlight()
 
 void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 {
+	//printf("IN PENGUIN: %d\n", QThread::currentThreadId());
 	Image *images = new Image [size];
 	for (int i=0; i < size; i++)
 	{
@@ -45,6 +46,8 @@ void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 			img = &penguin270;
 		}
 		CvPoint centCoord = recognizedSquares [i].GetCenterCoordinates ();
+		centCoord.x = centCoord.x * 6;
+		centCoord.y = centCoord.y * 4;
 		images[i] = Image (*img, QPoint (centCoord.x, centCoord.y));
 	}
 	

@@ -14,13 +14,27 @@ iCubes::iCubes(QWidget *parent)
 	QObject::connect (ui.buttonConfigure, SIGNAL (clicked()),
 						this, SLOT (ShowConfigureDialog()));
 
+	QObject::connect (ui.StartstopButton, SIGNAL (clicked()),
+						this, SLOT (StartStop()));
+
 	// Setup Color Palette
   	//setupModule (&m_colorPalette);
   
 	// Setup Penguin Flight
 	setupModule (&m_pinguinFlight);
-
-	m_frameProcessor.BeginRead (0, 10);
+}
+//--------------------------------------------------------------
+void iCubes::StartStop()
+{
+	if(QString::compare(ui.StartstopButton->text(), new QString("Start")) == 0)
+	{
+		m_frameProcessor.BeginRead (0, 10);
+		ui.StartstopButton->setText(QString("Stop"));	
+	} else 
+	{
+		m_frameProcessor.EndRead();
+		ui.StartstopButton->setText(QString("Start"));	
+	}	
 }
 
 
@@ -89,14 +103,20 @@ void iCubes::ShowConfigureDialog ()
 	configurator->setModal (true);
 	configurator->show ();
 }
-
+//--------------------------------------------------------------
+void iCubes::closeEvent(QCloseEvent *event)
+{
+	m_frameProcessor.EndRead();
+	while(m_frameProcessor.isRunning()) {
+		sleep(1);
+	}
+	event->accept();
+}
 //---------------------------------------------------------------
 
 iCubes::~iCubes()
 {
 	for (int i = 0; i < SIZE; i++)
 		delete m_labels [i];
-
-	m_frameProcessor.EndRead();
 
 }

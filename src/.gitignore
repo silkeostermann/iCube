@@ -6,3 +6,5 @@ Makefile.debug
 Makefile.release
 iCubes
 iCubes.app/
+*.swp
+

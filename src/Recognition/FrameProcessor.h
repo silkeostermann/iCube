@@ -4,6 +4,7 @@
 #include "Square.h"
 #include <qobject.h>
 #include <qthread.h> 
+#include <QMutex>
 #include <vector>
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
@@ -36,6 +37,8 @@ class FrameProcessor : public QThread
 	private:
 		int m_sleepTimeBetweenFramesMs;
 		int m_cameraId;
+		QMutex m_mutex;
+		bool m_terminateRequested;
 
 		float Euclid_dist(CvPoint*, CvPoint*);
 		float GetAngle(CvPoint **);
