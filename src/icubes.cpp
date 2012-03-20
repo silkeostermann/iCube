@@ -23,11 +23,6 @@ void iCubes::configureInterface() {
 	QObject::connect (ui.StartstopButton, SIGNAL (clicked()),
 						this, SLOT (StartStop()));
 
-	// Setup Color Palette
-  	//setupModule (&m_colorPalette);
-  
-	// Setup Penguin Flight
-	setupModule (&m_pinguinFlight);
 }
 //--------------------------------------------------------------
 void iCubes::StartStop()
@@ -42,6 +37,7 @@ void iCubes::StartStop()
 		ui.StartstopButton->setText(QString("Start"));	
 	}	
 }
+
 //------------------------------------------------------------
 void iCubes::setupModules() {
   this->modules["BinaryMath"]    = &(this->m_binMath);
@@ -59,7 +55,6 @@ void iCubes::setupModules() {
 //---------------------------------------------------------------
 // Connects module's "SquaresProcessed" signal to iCubes' "ShowObjects" slot
 //---------------------------------------------------------------
-
 void iCubes::disconnectModule(QObject *module) {
   printf("Disconnecting module! [TODO]\n");
   QObject::disconnect(&m_frameProcessor, SIGNAL(SquaresRecognized(const Square*, int)),
@@ -68,6 +63,7 @@ void iCubes::disconnectModule(QObject *module) {
                       this, 0);
 }
 
+//---------------------------------------------------------------------------
 void iCubes::setupModule(QObject *module) {
 	QObject::connect(module, SIGNAL(SquaresProcessed(const Image*, int)),
 									 this, SLOT(ShowObjects(const Image*, int)));
@@ -76,6 +72,7 @@ void iCubes::setupModule(QObject *module) {
                    module, SLOT(ProcessSquares(const Square*, int)));
 }
 
+//---------------------------------------------------------------------------
 void iCubes::changeModule(const QString &moduleName) {
   if (moduleName == "") return;
 
@@ -88,24 +85,6 @@ void iCubes::changeModule(const QString &moduleName) {
   this->setupModule(this->currentModule);
   
   printf("Changed module to %s\n", qPrintable(moduleName));
-}
-
-//---------------------------------------------------------------
-
-void iCubes::demoSquares() {
-	CvPoint p1 = cvPoint (30, 4);
-	Square sq1 (1, p1, 100, 6);
-
-	CvPoint p2 = cvPoint (50, 4);
-	Square sq2 (2, p2, 50, 6);
-
-	CvPoint p3 = cvPoint (100, 4);
-	Square sq3 (3, p3, 100, 6);
-
-	Square squares [3] = {sq1, sq2, sq3};
-
-	m_colorPalette.ProcessSquares (squares, 3);
-	// m_pinguinFlight->ProcessSquares (squares, 3);
 }
 
 //---------------------------------------------------------------
@@ -136,13 +115,13 @@ void iCubes::ShowObjects(const Image* processedSquares, int count)
 }
 
 //---------------------------------------------------------------
-
 void iCubes::ShowConfigureDialog ()
 {
 	Configure *configurator = new Configure(this, ui.moduleCombo->currentText());
 	configurator->setModal (true);
 	configurator->show ();
 }
+
 //--------------------------------------------------------------
 void iCubes::closeEvent(QCloseEvent *event)
 {
@@ -152,11 +131,12 @@ void iCubes::closeEvent(QCloseEvent *event)
 	}
 	event->accept();
 }
-//---------------------------------------------------------------
 
+//---------------------------------------------------------------
 iCubes::~iCubes()
 {
 	for (int i = 0; i < SIZE; i++)
 		delete m_labels [i];
 
 }
+

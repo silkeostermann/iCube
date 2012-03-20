@@ -31,7 +31,6 @@ class iCubes : public QMainWindow
 
 	public slots:
 		void ShowObjects (const Image*, int);
-		void demoSquares();
 		void ShowConfigureDialog();
     void changeModule(const QString &text);
 
