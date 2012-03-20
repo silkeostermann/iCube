@@ -53,11 +53,11 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 	CvPoint redPoint 		= red 	? red->GetCenterCoordinates()  	: cvPoint(0, 0);
 	CvPoint greenPoint 	= green ? green->GetCenterCoordinates() : cvPoint(0, 0);
 
-	printf ("'X' coordinate of RGB: %d %d %d\n", redPoint.x, greenPoint.x, bluePoint.x);
+	printf ("Coordinates of RGB: %d %d %d\n", redPoint.x, greenPoint.x, bluePoint.x);
 
-	int redAmount 	= 255 * (redPoint.x / 100);
-	int greenAmount	= 255 * (greenPoint.x / 100);
-	int blueAmount	= 255 * (bluePoint.x / 100);
+	int redAmount 	= 255 * ((float)redPoint.x / 100);
+	int greenAmount	= 255 * ((float)greenPoint.x / 100);
+	int blueAmount	= 255 * ((float)bluePoint.x / 100);
 
 	int redWidth = redAmount * 492 / 255;
 	int greenWidth = greenAmount * 492 / 255;
