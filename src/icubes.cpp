@@ -11,25 +11,7 @@ iCubes::iCubes(QWidget *parent)
   this->configureInterface();
   this->setupModules();
   
-  QObjectList plugins = QPluginLoader::staticInstances();
-  printf("Count of static plugins: %d\n", plugins.size());
-  
-  QDir pluginsDir = QDir("plugins");
-  
-  foreach (QString filename, pluginsDir.entryList(QDir::Files)) {
-    printf("Looking for plugins in %s\n", qPrintable(pluginsDir.absoluteFilePath(filename)));
-    QPluginLoader loader(pluginsDir.absoluteFilePath(filename));
-    QObject *plugin = loader.instance();
-    if (plugin) {
-      printf("Found plugin in %s\n", qPrintable(filename));
-      ModuleInterface *module = qobject_cast<ModuleInterface *>(plugin);
-      printf("The module name is %s\n", qPrintable(module->moduleName()));
-    } else {
-      printf("No plugin there\n");
-    }
-  }
-  
-  // m_frameProcessor.BeginRead (0, 10);
+  m_frameProcessor.BeginRead (0, 10);
 }
 
 void iCubes::configureInterface() {
@@ -47,6 +29,35 @@ void iCubes::configureInterface() {
 }
 
 void iCubes::setupModules() {
+  
+  // 01 Find all the module in the modules directory
+  
+  
+  QDir pluginsDir = QDir(qApp->applicationDirPath());
+
+  #if defined(Q_OS_MAC)
+      if (pluginsDir.dirName() == "MacOS") {
+          pluginsDir.cdUp();
+          pluginsDir.cdUp();
+          pluginsDir.cdUp();
+      }
+  #endif
+      pluginsDir.cd("modules");
+  
+  foreach (QString filename, pluginsDir.entryList(QDir::Files)) {
+    printf("Looking for plugins in %s\n", qPrintable(pluginsDir.absoluteFilePath(filename)));
+    QPluginLoader loader(pluginsDir.absoluteFilePath(filename));
+    QObject *plugin = loader.instance();
+    if (plugin) {
+      printf("Found plugin in %s\n", qPrintable(filename));
+      ModuleInterface *module = qobject_cast<ModuleInterface *>(plugin);
+      printf("The module name is %s\n", qPrintable(module->moduleName()));
+      this->setupModule(module);
+    } else {
+      printf("No plugin there\n");
+    }
+  }
+  
   // this->modules["Binary Math"]    = &(this->m_binMath);
   // this->modules["Color Palette"]  = &(this->m_colorPalette);
   // this->modules["Pinguin Flight"] = &(this->m_pinguinFlight);

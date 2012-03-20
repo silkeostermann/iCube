@@ -14,7 +14,9 @@ QString BlankLogic::moduleName() {
   return "Blank Logic!";
 }
 
-// void BlankLogic::ProcessSquares(const Square* recognizedSquares, int size) {}
+void BlankLogic::ProcessSquares(const Square* recognizedSquares, int size) {
+  printf("Processing squares\n");
+}
 
 BlankLogic::~BlankLogic () {
 
