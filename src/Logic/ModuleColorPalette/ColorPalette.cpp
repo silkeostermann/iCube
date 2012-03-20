@@ -63,6 +63,7 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 	int greenAmount	= 255 * ((float)greenPoint.x / 88);
 	int blueAmount	= 255 * ((float)bluePoint.x / 88);
 
+
 	if (redAmount>255) redAmount=255;
 	if (greenAmount>255) greenAmount=255;
 	if (blueAmount>255) blueAmount=255;
