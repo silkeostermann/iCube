@@ -99,6 +99,11 @@ void FrameProcessor::run ()
   while (running)
   {
     IplImage* img = cvQueryFrame (capture);
+
+    m_mutex.lock();
+    running = !m_terminateRequested;
+    m_mutex.unlock(); 
+
     if (!img)
     {
       //printf("Capture failed!\n");
@@ -126,9 +131,7 @@ void FrameProcessor::run ()
     cubes.clear ();
     delete [] squareArr;
     
-    m_mutex.lock();
-    running = !m_terminateRequested;
-    m_mutex.unlock(); 
+
   }
   cvReleaseCapture (&capture);
 }
