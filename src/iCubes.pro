@@ -4,6 +4,7 @@ QT += core \
     gui
 HEADERS += ConfigurationFileHelper.h \
     configure.h \
+    Logic/ModuleInterface.h \
     Logic/Image.h \
     Logic/ModuleBinaryMath/BinaryMath.h \
     Logic/ModuleColorPalette/ColorPalette.h \

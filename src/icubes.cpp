@@ -1,3 +1,5 @@
+#include <QPluginLoader>
+
 #include "icubes.h"
 
 
@@ -7,7 +9,10 @@ iCubes::iCubes(QWidget *parent)
   this->configureInterface();
   this->setupModules();
   
-	m_frameProcessor.BeginRead (0, 10);
+  QObjectList plugins = QPluginLoader::staticInstances();
+  printf("Count of plugins: %d\n", plugins.size());
+  
+  // m_frameProcessor.BeginRead (0, 10);
 }
 
 void iCubes::configureInterface() {
