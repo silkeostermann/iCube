@@ -3,17 +3,32 @@
 #include <cstdio>
 #include <stdlib.h>
 
+QHash<QString, bool> ModuleConfig::shouldReload;
+
 ModuleConfig::ModuleConfig(QString module) {
-	QString logicFilename = module + ".logic";
-	QString recogFilename = module + ".recognition";
-	
+  this->module = module;
+  this->load();
+}
+
+void ModuleConfig::load() {
+  QString logicFilename = this->module + ".logic";
+	QString recogFilename = this->module + ".recognition";
+
 	this->buildDictFromFile(&logicDict, &logicFilename);
 	this->buildDictFromFile(&recogDict, &recogFilename);
-	
-	QString objectName = this->objectByContoursCount(3);
+}
+
+void ModuleConfig::reloadIfNeeded() {
+  QString module = this->module;
+  if (shouldReload[module] == true) {
+    this->load();
+    shouldReload[module] = false;
+  }
 }
 
 void ModuleConfig::buildDictFromFile(QHash<int, QString> *dict, QString *filename) {
+  dict->clear();
+  
 	printf("Loading file %s\n", qPrintable(*filename));
 	QList<QStringList> list = ConfigurationFileHelper::ReadConfiguration(*filename);
 	
@@ -34,9 +49,15 @@ QString ModuleConfig::objectByContoursCount(int contourCount) {
 }
 
 QString ModuleConfig::objectById(int id) {
+  this->reloadIfNeeded();
 	return this->logicDict[id];
 }
 
 QString ModuleConfig::objectForSquare(Square *square) {
 	return this->objectByContoursCount(square->GetContoursCount());
+}
+
+void ModuleConfig::invalidateModule(QString module) {
+  printf("Invalidating module %s!\n", qPrintable(module));
+  shouldReload[module] = true;
 }
