@@ -3,8 +3,8 @@ class ModuleInterface
 public:
   virtual ~ModuleInterface() {}
   
-  virtual ModuleName();
-  virtual ProcessSquares();
+  virtual QString moduleName();
+  virtual void ProcessSquares();
 };
 
 Q_DECLARE_INTERFACE(ModuleInterface, "org.iCubes.ModuleInterface/1.0")

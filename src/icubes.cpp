@@ -1,6 +1,8 @@
+#include <QDir>
 #include <QPluginLoader>
 
 #include "icubes.h"
+#include "Logic/ModuleInterface.h"
 
 
 iCubes::iCubes(QWidget *parent)
@@ -10,7 +12,20 @@ iCubes::iCubes(QWidget *parent)
   this->setupModules();
   
   QObjectList plugins = QPluginLoader::staticInstances();
-  printf("Count of plugins: %d\n", plugins.size());
+  printf("Count of static plugins: %d\n", plugins.size());
+  
+  QDir pluginsDir = QDir("plugins");
+  
+  foreach (QString filename, pluginsDir.entryList(QDir::Files)) {
+    printf("Looking for plugins in %s\n", qPrintable(pluginsDir.absoluteFilePath(filename)));
+    QPluginLoader loader(pluginsDir.absoluteFilePath(filename));
+    QObject *plugin = loader.instance();
+    if(plugin) {
+      printf("Found plugin in %s\n", qPrintable(filename));
+      ModuleInterface *module = qobject_cast<ModuleInterface *>(plugin);
+      printf("The module name is %s\n", qPrintable(module->moduleName()));
+    }
+  }
   
   // m_frameProcessor.BeginRead (0, 10);
 }
@@ -30,9 +45,9 @@ void iCubes::configureInterface() {
 }
 
 void iCubes::setupModules() {
-  this->modules["Binary Math"]    = &(this->m_binMath);
-  this->modules["Color Palette"]  = &(this->m_colorPalette);
-  this->modules["Pinguin Flight"] = &(this->m_pinguinFlight);
+  // this->modules["Binary Math"]    = &(this->m_binMath);
+  // this->modules["Color Palette"]  = &(this->m_colorPalette);
+  // this->modules["Pinguin Flight"] = &(this->m_pinguinFlight);
 
   this->currentModule = NULL;
 
@@ -75,24 +90,6 @@ void iCubes::changeModule(const QString &moduleName) {
   this->setupModule(this->currentModule);
   
   printf("Changed module to %s\n", qPrintable(moduleName));
-}
-
-//---------------------------------------------------------------
-
-void iCubes::demoSquares() {
-	CvPoint p1 = cvPoint (30, 4);
-	Square sq1 (1, p1, 100, 6);
-
-	CvPoint p2 = cvPoint (50, 4);
-	Square sq2 (2, p2, 50, 6);
-
-	CvPoint p3 = cvPoint (100, 4);
-	Square sq3 (3, p3, 100, 6);
-
-	Square squares [3] = {sq1, sq2, sq3};
-
-	m_colorPalette.ProcessSquares (squares, 3);
-	// m_pinguinFlight->ProcessSquares (squares, 3);
 }
 
 //---------------------------------------------------------------

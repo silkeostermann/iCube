@@ -7,7 +7,6 @@
 #include <vector>
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
-#include "../Logic/ModuleColorPalette/ColorPalette.h"
 
 using namespace std;
 
