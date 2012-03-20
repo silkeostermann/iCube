@@ -199,6 +199,7 @@ BinaryMath::BinaryMath() {
 }
 
 
+
 // Constructor
 void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 {
