@@ -17,9 +17,9 @@ void iCubes::configureInterface() {
 	setWindowTitle("iCubes");
 	for (int i = 0; i < SIZE; i++)
 		m_labels [i] = new QLabel (this);
-  
-  QObject::connect (ui.buttonConfigure, SIGNAL (clicked()),
-						this, SLOT (ShowConfigureDialog()));
+
+	QObject::connect (ui.buttonConfigure, SIGNAL (clicked()),
+						        this, SLOT (ShowConfigureDialog()));
 	
   QObject::connect(ui.moduleCombo, SIGNAL(currentIndexChanged(const QString &)),
                    this, SLOT(changeModule(const QString &)));
@@ -97,13 +97,15 @@ void iCubes::demoSquares() {
 //---------------------------------------------------------------
 void iCubes::ShowObjects(const Image* processedSquares, int count)
 {
+	QPoint point_canvas = ui.groupBox->pos();
+
 	for (int i = 0; i < count && i < SIZE; i++)
 	{
 		const Image *img = &(processedSquares[i]);
 		int xpos = img->imageRelativeCoordinates.x();
 		int ypos = img->imageRelativeCoordinates.y();
 
-		m_labels [i]->move(xpos, ypos);
+		m_labels [i]->move(xpos + point_canvas.x(), ypos + point_canvas.y());
 		m_labels [i]->resize (img->image.width (), img->image.height());
 
 		m_labels [i]->setPixmap (QPixmap::fromImage(img->image));
@@ -120,19 +122,15 @@ void iCubes::ShowObjects(const Image* processedSquares, int count)
 
 void iCubes::ShowConfigureDialog ()
 {
-	if (m_configurator == NULL)
-		m_configurator = new Configure (this);
-
-	m_configurator->setModal (true);
-	m_configurator->show ();
+	Configure *configurator = new Configure(this, ui.comboboxModule->currentText());
+	configurator->setModal (true);
+	configurator->show ();
 }
 
 //---------------------------------------------------------------
 
 iCubes::~iCubes()
 {
-	delete m_configurator;
-
 	for (int i = 0; i < SIZE; i++)
 		delete m_labels [i];
 
