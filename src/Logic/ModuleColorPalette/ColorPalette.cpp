@@ -59,14 +59,18 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
   int barDistance = 52;
 
 
-	int redAmount 	= 255 * ((float)redPoint.x / 88);
-	int greenAmount	= 255 * ((float)greenPoint.x / 88);
-	int blueAmount	= 255 * ((float)bluePoint.x / 88);
+	int redAmount 	= (255 * ((float)redPoint.x-10)/ 83);
+	int greenAmount	= (255 * ((float)greenPoint.x-10 )/ 83);
+	int blueAmount	= (255 * ((float)bluePoint.x -10 )/ 83);
 
 
 	if (redAmount>255) redAmount=255;
 	if (greenAmount>255) greenAmount=255;
 	if (blueAmount>255) blueAmount=255;
+
+	if (redAmount<0) redAmount=0;
+	if (greenAmount<0) greenAmount=0;
+	if (blueAmount<0) blueAmount=0;
 
 	int redWidth = redAmount * 492 / 255;
 	int greenWidth = greenAmount * 492 / 255;
