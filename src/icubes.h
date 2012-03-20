@@ -42,7 +42,6 @@ class iCubes : public QMainWindow
 		ColorPalette m_colorPalette;
 		PinguinFlight m_pinguinFlight;
 
-		Configure* m_configurator;
 		QLabel* m_labels [SIZE];
 
 };

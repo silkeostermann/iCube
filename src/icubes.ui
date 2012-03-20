@@ -38,12 +38,12 @@
     </property>
     <item>
      <property name="text">
-      <string>Binary Math</string>
+      <string>BinaryMath</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Color Palette</string>
+      <string>ColorPalette</string>
      </property>
     </item>
    </widget>
