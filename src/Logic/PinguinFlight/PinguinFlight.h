@@ -15,9 +15,9 @@ class PinguinFlight : public QObject
 	Q_OBJECT
 
   	private:
-    		QImage penguin0, penguin90, penguin180, penguin270;
-
-	public:
+    		QImage penguin0a, penguin90a, penguin180a, penguin270a, penguin0b, penguin90b, penguin180b, penguin270b;
+    		int chosenImage;
+  	public:
 		PinguinFlight();
 		~PinguinFlight();
 
