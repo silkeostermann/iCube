@@ -1,5 +1,7 @@
 #include "ModuleConfig.h"
 #include "ConfigurationFileHelper.h"
+#include <cstdio>
+#include <stdlib.h>
 
 ModuleConfig::ModuleConfig(QString module) {
 	QString logicFilename = module + ".logic";
