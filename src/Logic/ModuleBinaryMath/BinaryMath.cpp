@@ -195,7 +195,7 @@ int dist(Square square1, Square square2)
 // ----------------------------------------------------------------------------
 
 BinaryMath::BinaryMath() {
-  
+	this->moduleConfig = new ModuleConfig("BinaryMath");
 }
 
 
@@ -217,7 +217,7 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
 	recognizedSquares[2] = Square(2, cvPoint(30, 20), 1, 1);
 	*/
   
-	this->moduleConfig = new ModuleConfig("BinaryMath");
+
 
 	int NumberOfSquares = size; 
 	int threshold = 6;
@@ -362,6 +362,7 @@ void BinaryMath::ProcessSquares(const Square* recognizedSquares, int size)
   delete [] NumberBinStrings;  
   delete qImage;
   delete painter;
+
 }
 
 string BinaryMath::executeOperation(char operation, string *numberStrings, int clusterSize) {
@@ -433,7 +434,7 @@ char BinaryMath::binNumberCharForSquare(Square *square) {
 
 BinaryMath::~BinaryMath ()
 {
-
+	delete this->moduleConfig;
 }
 //NumberSquares
 /*
