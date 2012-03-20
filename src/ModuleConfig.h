@@ -15,13 +15,13 @@ class ModuleConfig {
 
 public:
 	ModuleConfig(QString module);
+	QString objectByContoursCount(int contourCount);
 	
 private:
 	QHash<int, QString> logicDict;
 	QHash<int, QString>	recogDict;
 	
 	void buildDictFromFile(QHash<int, QString> *dict, QString *filename);
-	QString objectByContoursCount(int contourCount);
 	QString objectById(int id);
 
 };

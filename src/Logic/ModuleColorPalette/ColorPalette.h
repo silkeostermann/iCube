@@ -6,6 +6,7 @@
 #include "../Image.h"
 #include "../../Recognition/Square.h"
 #include "ConfigurationFileHelper.h"
+#include "ModuleConfig.h"
 
 #include <qobject.h>
 #include <QtGui/QImage>
@@ -35,12 +36,8 @@ class ColorPalette : public QObject
 		QImage *m_blueBar;
 		QString *palettePath;
 
-		int idRed;
-		int idGreen;
-		int idBlue;
+		ModuleConfig *moduleConfig;
 
-		//QList<QStringList> list;
-		ConfigurationFileHelper *config;
 	public:
 		ColorPalette();
 		~ColorPalette();

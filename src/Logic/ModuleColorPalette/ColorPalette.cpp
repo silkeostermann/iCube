@@ -11,13 +11,7 @@
 ColorPalette::ColorPalette() {
 	printf ("Constructing color palette.\n");
 
-	QList<QStringList> list;
-	QList<QStringList> list2;
-	list=this->config->ReadConfiguration("ColorPallete.logic");
-
-	list2=this->config->ReadConfiguration("ColorPallete.recognition");
-
-	// Prepare the UI images
+	this->moduleConfig = new ModuleConfig("ColorPalette");
 
 	m_interface = new QImage (QSize (640, 640), QImage::Format_RGB16);
 	m_ball = new QImage (QSize (52, 54), QImage::Format_RGB16);
@@ -30,45 +24,6 @@ ColorPalette::ColorPalette() {
 	m_redBar->load("Logic/ModuleColorPalette/Bar_Red.png");
 	m_blueBar->load ("Logic/ModuleColorPalette/Bar_Blue");
 	m_greenBar->load ("Logic/ModuleColorPalette/Bar_Green");
-
-	for (int i=0; i < list.size()-1; i++){
-		if (list.at(i).at(1)=="red") {
-
-			idRed=list.at(i).at(0).toInt();
-		}
-		if (list.at(i).at(1)=="blue") {
-
-			idBlue=list.at(i).at(0).toInt();
-		}
-		if (list.at(i).at(1)=="green") {
-
-			idGreen=list.at(i).at(0).toInt();
-		}
-
-	}
-
-	printf("idRed is %d\n",idRed);
-	printf("idGreen is %d\n",idGreen);
-	printf("idBlue is %d\n",idBlue);
-
-
-
-	for (int i=0; i < list2.size()-1; i++){
-		if (list2.at(i).at(1).toInt()==idRed) {
-			idRed=list2.at(i).at(0).toInt();
-		}
-		if (list2.at(i).at(1).toInt()==idGreen) {
-			idGreen=list2.at(i).at(0).toInt();
-		}
-		if (list2.at(i).at(1).toInt()==idBlue) {
-			idBlue=list2.at(i).at(0).toInt();
-		}
-
-	}
-		printf("idRed is %d\n",idRed);
-		printf("idGreen is %d\n",idGreen);
-		printf("idBlue is %d\n",idBlue);
-
 }
 
 //---------------------------------------------------------------
@@ -80,36 +35,27 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 	const Square* blue = NULL;
 	const Square* red = NULL;
 	const Square* green = NULL;
-	QList<QStringList> list;
-	list=this->config->ReadConfiguration("ColorPallete.recognition");
-
 	
-	
-	// TODO: Load ID from file and store as table (array)
 	for (int i=0; i < size; i++)
 	{
-		//if (recognizedSquares [i].GetId () == IDforObject("red")
-		//			red = &recognizedSquares [i];
+		const Square *square = &(recognizedSquares[i]);
+		// FIXME: We're using GetId to get number of contours. The GetId method
+		// of square should be renamed to GetContoursCount, because that's its
+		// true semantics.
+		QString objectName = this->moduleConfig->objectByContoursCount(square->GetId());
 
-		if (recognizedSquares [i].GetId () == idRed)
-			red = &recognizedSquares [i];
-
-		if (recognizedSquares [i].GetId () == idGreen)
-			green = &recognizedSquares [i];
-
-		if (recognizedSquares [i].GetId () == idBlue)
-			blue = &recognizedSquares[i];
+		if (objectName == "red") 		red = square;
+		if (objectName == "green") 	green = square;
+		if (objectName == "blue") 	blue = square;
 	}
 
-	// NOTE: Careful here, control repeated cubes, control not present cubes (defaulting?)
-
-	CvPoint bluePoint = blue ? blue->GetCenterCoordinates() : cvPoint(0, 0);
-	CvPoint redPoint = red ? red->GetCenterCoordinates()  : cvPoint(0, 0);
-	CvPoint greenPoint = green ? green->GetCenterCoordinates() : cvPoint(0, 0);
+	CvPoint bluePoint 	= blue 	? blue->GetCenterCoordinates() 	: cvPoint(0, 0);
+	CvPoint redPoint 		= red 	? red->GetCenterCoordinates()  	: cvPoint(0, 0);
+	CvPoint greenPoint 	= green ? green->GetCenterCoordinates() : cvPoint(0, 0);
 
 	printf ("'X' coordinate of RGB: %d %d %d\n", redPoint.x, greenPoint.x, bluePoint.x);
 
-	int redAmount = 255 * (redPoint.x / 100);
+	int redAmount 	= 255 * (redPoint.x / 100);
 	int greenAmount	= 255 * (greenPoint.x / 100);
 	int blueAmount	= 255 * (bluePoint.x / 100);
 
