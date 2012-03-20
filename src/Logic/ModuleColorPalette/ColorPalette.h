@@ -30,6 +30,7 @@ class ColorPalette : public QObject
 
 	private:
 		QImage *m_interface;
+    QImage *m_gloss;
 		QImage *m_ball;
 		QImage *m_redBar;
 		QImage *m_greenBar;
