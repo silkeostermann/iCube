@@ -17,10 +17,8 @@ iCubes::iCubes(QWidget *parent)
 	// Setup Color Palette
   	//setupModule (&m_colorPalette);
   
-
 	// Setup Penguin Flight
 	setupModule (&m_pinguinFlight);
-	/**/
 
 	m_frameProcessor.BeginRead (0, 10);
 }
@@ -62,13 +60,15 @@ void iCubes::demoSquares() {
 //---------------------------------------------------------------
 void iCubes::ShowObjects(const Image* processedSquares, int count)
 {
+	QPoint point_canvas = ui.groupBox->pos();
+
 	for (int i = 0; i < count && i < SIZE; i++)
 	{
 		const Image *img = &(processedSquares[i]);
 		int xpos = img->imageRelativeCoordinates.x();
 		int ypos = img->imageRelativeCoordinates.y();
 
-		m_labels [i]->move(xpos, ypos);
+		m_labels [i]->move(xpos + point_canvas.x(), ypos + point_canvas.y());
 		m_labels [i]->resize (img->image.width (), img->image.height());
 
 		m_labels [i]->setPixmap (QPixmap::fromImage(img->image));
@@ -98,4 +98,5 @@ iCubes::~iCubes()
 		delete m_labels [i];
 
 	m_frameProcessor.EndRead();
+
 }
