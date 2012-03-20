@@ -25,9 +25,9 @@ void iCubes::configureInterface() {
 }
 
 void iCubes::setupModules() {
-  this->modules["Binary Math"]    = &(this->m_binMath);
-  this->modules["Color Palette"]  = &(this->m_colorPalette);
-  this->modules["Pinguin Flight"] = &(this->m_pinguinFlight);
+  this->modules["BinaryMath"]    = &(this->m_binMath);
+  this->modules["ColorPalette"]  = &(this->m_colorPalette);
+  this->modules["PinguinFlight"] = &(this->m_pinguinFlight);
 
   this->currentModule = NULL;
 
