@@ -1,23 +1,30 @@
-#ifndef BINARY_MATH_H
-#define BINARY_MATH_H
+#ifndef BLANK_LOGIC_H
+#define BLANK_LOGIC_H
 
-#include "../../Recognition/Square.h"
-#include "../Image.h"
+#include <QObject>
+
+#include "Logic/ModuleInterface.h"
+#include "Logic/Image.h"
+#include "Recognition/Square.h"
 #include <qobject.h>
 
-class BlankLogic : public QObject
+class BlankLogic : public QObject, public ModuleInterface
 {
 	Q_OBJECT
+	Q_INTERFACES(ModuleInterface)
 
-	public:
-	BlankLogic();
+  public:
+	  BlankLogic();
 		~BlankLogic();
+    QString moduleName();
 
-	public slots:
-		void ProcessSquares(const Square* squares, int size);
+  
 
-	signals:
-		void SquaresProcessed(const Image *image, int size);
+  // public slots:
+    // void ProcessSquares(const Square* squares, int size);
+
+  // signals:
+    // void SquaresProcessed(const Image *image, int size);
 
 };
 

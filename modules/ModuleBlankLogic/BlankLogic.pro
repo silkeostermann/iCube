@@ -3,5 +3,5 @@ CONFIG      += plugin
 INCLUDEPATH += ../../src
 HEADERS     = BlankLogic.h
 SOURCES     = BlankLogic.cpp
-TARGET      = $$qtLibraryTarget(icubes_blanklogic)
+TARGET      = $$qtLibraryTarget(cubes_blanklogic)
 DESTDIR     = ../../build/plugins

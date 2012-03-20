@@ -20,10 +20,12 @@ iCubes::iCubes(QWidget *parent)
     printf("Looking for plugins in %s\n", qPrintable(pluginsDir.absoluteFilePath(filename)));
     QPluginLoader loader(pluginsDir.absoluteFilePath(filename));
     QObject *plugin = loader.instance();
-    if(plugin) {
+    if (plugin) {
       printf("Found plugin in %s\n", qPrintable(filename));
       ModuleInterface *module = qobject_cast<ModuleInterface *>(plugin);
       printf("The module name is %s\n", qPrintable(module->moduleName()));
+    } else {
+      printf("No plugin there\n");
     }
   }
   
