@@ -46,9 +46,9 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 		if (objectName == "blue") 	blue = square;
 	}
 
-	CvPoint bluePoint 	= blue 	? blue->GetCenterCoordinates() 	: cvPoint(0, 0);
-	CvPoint redPoint 		= red 	? red->GetCenterCoordinates()  	: cvPoint(0, 0);
-	CvPoint greenPoint 	= green ? green->GetCenterCoordinates() : cvPoint(0, 0);
+	CvPoint bluePoint 	= (blue 	== NULL) 	? blue->GetCenterCoordinates() 	: cvPoint(0, 0);
+	CvPoint redPoint 		= (red	 	== NULL) 	? red->GetCenterCoordinates()  	: cvPoint(0, 0);
+	CvPoint greenPoint 	= (green 	== NULL) 	? green->GetCenterCoordinates() : cvPoint(0, 0);
 
 	printf ("Coordinates of RGB: %d %d %d\n", redPoint.x, greenPoint.x, bluePoint.x);
 
