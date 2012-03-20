@@ -27,7 +27,7 @@
      <string>Module</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboboxModule">
+   <widget class="QComboBox" name="moduleCombo">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -36,16 +36,6 @@
       <height>24</height>
      </rect>
     </property>
-    <item>
-     <property name="text">
-      <string>Binary Math</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Color Palette</string>
-     </property>
-    </item>
    </widget>
    <widget class="QPushButton" name="buttonConfigure">
     <property name="geometry">
