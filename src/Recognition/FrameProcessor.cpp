@@ -36,19 +36,21 @@ float FrameProcessor::GetAngle(CvPoint **pt)
 	if(angle < 0)
 		angle += 360;
 
+	float rotation;
+
 	if(angle < 45)
-		angle = 0;
+		rotation = 90;
 	else if(angle < 135)
-		angle = 90;
-	else if(angle < 225) 
-		angle = 180;
-	else if(angle < 315) 
-		angle = 270;
-	else angle = 0;
+		rotation = 0;
+	else if(angle < 225)
+		rotation = 270;
+	else if(angle < 315)
+		rotation = 180;
+	else rotation = 90;
 
 	// printf("%f\n", angle);
 
-	return angle;
+	return rotation;
 }
 
 //---------------------------------------------------------------
