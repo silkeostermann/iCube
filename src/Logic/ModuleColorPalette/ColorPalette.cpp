@@ -37,7 +37,7 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 	const Square* blue = NULL;
 	const Square* red = NULL;
 	const Square* green = NULL;
-	
+
 	for (int i=0; i < size; i++)
 	{
 		Square *square = (Square *) &(recognizedSquares[i]);
@@ -47,15 +47,15 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 		if (objectName == "green") 	green = square;
 		if (objectName == "blue") 	blue = square;
 	}
-	
-  CvPoint bluePoint   = this->pointFromSquareOrDefault(blue, "blue");
-  CvPoint redPoint    = this->pointFromSquareOrDefault(red, "red");
+
+  CvPoint bluePoint   = this->pointFromSquareOrDefault(blue,  "blue");
+  CvPoint redPoint    = this->pointFromSquareOrDefault(red,   "red");
   CvPoint greenPoint  = this->pointFromSquareOrDefault(green, "green");
 	
 	printf ("Coordinates of RGB: %d %d %d\n", redPoint.x, greenPoint.x, bluePoint.x);
 
-  int leftMargin = 140;
-  int topMargin = 112;
+  int leftMargin = 119;
+  int topMargin = 34;
   int barDistance = 52;
 
 
@@ -90,13 +90,13 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 
   // User Interface
   
-  Image interfaceImage(*m_interface, QPoint(21, 78));
+  Image interfaceImage(*m_interface, QPoint(0, 0));
   
 	QImage rgbcolor (521, 110, QImage::Format_RGB32);
 	rgbcolor.fill(color.rgba());
 	
-	Image rgbimage (rgbcolor, QPoint(141, 281));
-  Image glossImage(*m_gloss, QPoint(141, 281));
+	Image rgbimage (rgbcolor, QPoint(leftMargin+1, topMargin+169));
+  Image glossImage(*m_gloss, QPoint(leftMargin+1, topMargin+169));
 
 	QImage redBarCopy = m_redBar->copy(QRect(0, 0, redWidth+10, 20));
 	Image redbarimg (redBarCopy, redbarposition);
