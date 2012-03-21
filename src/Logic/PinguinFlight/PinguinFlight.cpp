@@ -24,6 +24,7 @@ PinguinFlight::PinguinFlight()
 {
 	chosenImage=0;
 
+	northpole = QImage("./Logic/PinguinFlight/northpole.jpg");
 	penguin0a = QImage("./Logic/PinguinFlight/pinguin0a.png");
 	penguin90a = QImage("./Logic/PinguinFlight/pinguin90a.png");
 	penguin180a = QImage("./Logic/PinguinFlight/pinguin180a.png");
@@ -41,11 +42,11 @@ void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 	//printf("IN PENGUIN: %d\n", QThread::currentThreadId());
   printf("[PinguinFlight] ProcessSquares\n");
   
-	Image *images = new Image [size];
+	Image *images = new Image [size+1];
 
 
-
-	for (int i=0; i < size; i++)
+	images[0] = Image (northpole, QPoint (1, 1));
+	for (int i=0, t = 1; i < size; i++, t++)
 	{
 		QImage *img;
 		if(recognizedSquares[i].GetAngle() == 0) {
@@ -76,7 +77,7 @@ void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 		CvPoint centCoord = recognizedSquares [i].GetCenterCoordinates ();
 		centCoord.x = centCoord.x * 6;
 		centCoord.y = centCoord.y * 4;
-		images[i] = Image (*img, QPoint (centCoord.x, centCoord.y));
+		images[t] = Image (*img, QPoint (centCoord.x, centCoord.y));
 	}
 
 	if(chosenImage==0){
@@ -85,7 +86,7 @@ void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 		chosenImage=0;
 	}
 
-	emit SquaresProcessed (images, size);
+	emit SquaresProcessed (images, size+1);
 	delete [] images;
 }
 
