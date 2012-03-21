@@ -42,11 +42,14 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 	{
 		Square *square = (Square *) &(recognizedSquares[i]);
 		QString objectName = this->moduleConfig->objectForSquare(square);
+		
+    printf("Square: %s (%d) ", qPrintable(objectName), square->GetContoursCount());
 
 		if (objectName == "red") 		red = square;
 		if (objectName == "green") 	green = square;
 		if (objectName == "blue") 	blue = square;
 	}
+  printf("\n");
 
   CvPoint bluePoint   = this->pointFromSquareOrDefault(blue,  "blue");
   CvPoint redPoint    = this->pointFromSquareOrDefault(red,   "red");
@@ -131,13 +134,23 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 
 
 CvPoint ColorPalette::pointFromSquareOrDefault(const Square *square, QString name) {
-  if (square != NULL){
+  if (square != NULL && !this->lastPoints.contains(name)) {
     CvPoint coords = square->GetCenterCoordinates();
     this->lastPoints[name] = coords;
+    this->lastPointsDuration[name] = 0;
     return coords;
-  } else if (this->lastPoints.contains(name)) {
+  } else if (square != NULL && this->lastPoints.contains(name)) {
+    this->lastPointsDuration[name] += 1;
+    CvPoint coords = square->GetCenterCoordinates();
+    return coords;
+  } else if (this->lastPoints.contains(name) && this->lastPointsDuration[name] > 5) {
     return this->lastPoints[name];
+  } else if (this->lastPoints.contains(name)) {
+    // this->lastPointsDuration[name] += 1;
+    return cvPoint(0, 0);
   } else {
+    this->lastPoints.remove(name);
+    this->lastPointsDuration.remove(name);
     return cvPoint(0, 0);
   }
 }

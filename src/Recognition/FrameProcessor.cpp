@@ -96,8 +96,8 @@ void FrameProcessor::run ()
 {
   //printf("IN RUN: %d\n", QThread::currentThreadId());
   CvCapture* capture = cvCaptureFromCAM(m_cameraId);
-  cvNamedWindow("original");
-  cvNamedWindow("cam");
+  cvNamedWindow("cam1");
+  cvNamedWindow("cam2");
   vector <Square> cubes;
   bool running = true;
   while (running)
@@ -115,7 +115,6 @@ void FrameProcessor::run ()
       continue;
     }
 
-    cvShowImage("original", img);
 
     DetectAndDrawQuads (img, cubes, capture);
     Square* squareArr = new Square [cubes.size()];
@@ -157,19 +156,21 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 	cvCvtColor(img, temp, CV_BGR2GRAY);
 
   IplImage* Img = cvCreateImage (cvGetSize (img), 8, 1);
+  IplImage *threshold1 = cvCreateImage(cvGetSize(img), 8, 1);
   // IplImage *Img = temp;
-  // cvThreshold(temp, Img, 142, 255, CV_THRESH_BINARY);
-  cvAdaptiveThreshold(temp, Img, 142, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 19, -5);
+  // cvThreshold(temp, threshold1, 142, 255, CV_THRESH_BINARY);
+  cvAdaptiveThreshold(temp, Img, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 69, -20);
 
   // for (int i = 0; i < )
 	
-  cvShowImage("cam", Img);
+  cvShowImage("cam1", Img);
+  // cvShowImage("cam2", threshold1);
 
-	cvFindContours(Img, storage, &contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));
+	cvFindContours(Img, storage, &contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_NONE, cvPoint(0,0));
 	CvSeq* contours1 = contours;
 	while(contours)
     {
-		result = cvApproxPoly (contours, sizeof (CvContour), storage, CV_POLY_APPROX_DP, cvContourPerimeter (contours) * 0.02, 0);
+		result = cvApproxPoly(contours, sizeof (CvContour), storage, CV_POLY_APPROX_DP, cvContourPerimeter (contours) * 0.02, 0);
 
 		if((result->total==4)  && (fabs(cvContourArea(result, CV_WHOLE_SEQ)) > 30) && cvCheckContourConvexity (result))
         {

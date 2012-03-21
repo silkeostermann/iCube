@@ -29,7 +29,7 @@ void iCubes::StartStop()
 {
 	if(QString::compare(ui.StartstopButton->text(), new QString("Start")) == 0)
 	{
-		m_frameProcessor.BeginRead (0, 10);
+		m_frameProcessor.BeginRead(0, 25);
 		ui.StartstopButton->setText(QString("Stop"));	
 	} else 
 	{
