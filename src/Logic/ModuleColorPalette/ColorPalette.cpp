@@ -48,9 +48,9 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 		if (objectName == "blue") 	blue = square;
 	}
 	
-	CvPoint bluePoint 	= (blue   != NULL) 	? blue->GetCenterCoordinates() 	: cvPoint(0, 0);
-	CvPoint redPoint 		= (red    != NULL) 	? red->GetCenterCoordinates()  	: cvPoint(0, 0);
-	CvPoint greenPoint 	= (green  != NULL) 	? green->GetCenterCoordinates() : cvPoint(0, 0);
+  CvPoint bluePoint   = this->pointFromSquareOrDefault(blue, "blue");
+  CvPoint redPoint    = this->pointFromSquareOrDefault(red, "red");
+  CvPoint greenPoint  = this->pointFromSquareOrDefault(green, "green");
 	
 	printf ("Coordinates of RGB: %d %d %d\n", redPoint.x, greenPoint.x, bluePoint.x);
 
@@ -129,6 +129,18 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 	// TODO: Deallocate the QImages created with copy -- how?
 }
 
+
+CvPoint ColorPalette::pointFromSquareOrDefault(const Square *square, QString name) {
+  if (square != NULL){
+    CvPoint coords = square->GetCenterCoordinates();
+    this->lastPoints[name] = coords;
+    return coords;
+  } else if (this->lastPoints.contains(name)) {
+    return this->lastPoints[name];
+  } else {
+    return cvPoint(0, 0);
+  }
+}
 
 //---------------------------------------------------------------
 // Destructor.

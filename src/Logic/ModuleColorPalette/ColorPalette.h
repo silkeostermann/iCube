@@ -38,6 +38,9 @@ class ColorPalette : public QObject
 		QString *palettePath;
 
 		ModuleConfig *moduleConfig;
+		
+    QHash<QString, CvPoint> lastPoints;
+    CvPoint pointFromSquareOrDefault(const Square *square, QString name);
 
 	public:
 		ColorPalette();
