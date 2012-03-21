@@ -95,7 +95,9 @@ void FrameProcessor::EndRead ()
 void FrameProcessor::run ()
 {
   //printf("IN RUN: %d\n", QThread::currentThreadId());
-  CvCapture* capture = cvCaptureFromCAM (m_cameraId);
+  CvCapture* capture = cvCaptureFromCAM(m_cameraId);
+  cvNamedWindow("original");
+  cvNamedWindow("cam");
   vector <Square> cubes;
   bool running = true;
   while (running)
@@ -112,6 +114,8 @@ void FrameProcessor::run ()
       sleep(1);
       continue;
     }
+
+    cvShowImage("original", img);
 
     DetectAndDrawQuads (img, cubes, capture);
     Square* squareArr = new Square [cubes.size()];
@@ -152,8 +156,14 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 
 	cvCvtColor(img, temp, CV_BGR2GRAY);
 
-	IplImage* Img = cvCreateImage (cvGetSize (img), 8, 1);
-	cvThreshold(temp, Img, 0, 255, CV_THRESH_BINARY_INV | CV_THRESH_OTSU);
+  IplImage* Img = cvCreateImage (cvGetSize (img), 8, 1);
+  // IplImage *Img = temp;
+  // cvThreshold(temp, Img, 142, 255, CV_THRESH_BINARY);
+  cvAdaptiveThreshold(temp, Img, 142, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 19, -5);
+
+  // for (int i = 0; i < )
+	
+  cvShowImage("cam", Img);
 
 	cvFindContours(Img, storage, &contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));
 	CvSeq* contours1 = contours;
