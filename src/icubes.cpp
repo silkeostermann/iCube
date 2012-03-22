@@ -9,8 +9,8 @@ iCubes::iCubes(QWidget *parent)
 }
 
 void iCubes::configureInterface() {
-  ui.setupUi (this);
-
+	ui.setupUi (this);
+	setFixedSize(800, 600);
 	setWindowTitle("iCubes");
 	for (int i = 0; i < SIZE; i++)
 		m_labels [i] = new QLabel (this);
