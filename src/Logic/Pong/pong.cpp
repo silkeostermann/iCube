@@ -21,6 +21,9 @@ const int RIGHTPAD_XPOS = 680;
 
 Pong::Pong()
 {
+
+	score1 = 0;
+	score2 = 0;
 	srand(time(0));
     	restart();
 	m_leftpad_ypos = m_rightpad_ypos = CANVAS_H / 2 + PAD_SIZE / 2;
@@ -93,7 +96,6 @@ void Pong::ProcessSquares (const Square *recognizedSquares, int size)
 
 	if(m_ball_pos.x() + BALL_SIZE > RIGHTPAD_XPOS)
 	{
-		//printf("%d %d\n", m_rightpad_ypos, m_ball_pos.y());
 		if(abs(m_rightpad_ypos - m_ball_pos.y() + BALL_SIZE/2) < PAD_SIZE / 2)
 		{
                 	m_ball_pos.setX(RIGHTPAD_XPOS - BALL_SIZE);
@@ -102,6 +104,7 @@ void Pong::ProcessSquares (const Square *recognizedSquares, int size)
 		} 
 		else 
 		{
+			score1++; 
 			restart();	
 		}	
 	}
@@ -115,6 +118,7 @@ void Pong::ProcessSquares (const Square *recognizedSquares, int size)
 		} 
 		else 
 		{
+			score2++;
 			restart();	
 		}
         }
@@ -129,13 +133,38 @@ void Pong::ProcessSquares (const Square *recognizedSquares, int size)
                 m_ball_speed.setY(-m_ball_speed.y());		
         }
 	
-	Image imgs[3];
-	imgs[0] = Image(*m_ball, m_ball_pos);
+	Image imgs[5];
+
+	QString score_1 = QString::number(score1);
+	QImage qImage1 = QImage(QSize(50,50), QImage::Format_RGB16);
+	QPainter *painter1 = new QPainter(&qImage1);
+	painter1->fillRect(0, 0, 50, 50, QColor(240, 240, 240));		
+	painter1->setPen(QColor(0,0,0));
+	painter1->setFont(QFont("Arial", 24));
+	painter1->drawText(0, 25, score_1);
+	QPoint point_score1 = QPoint(0, 40);		
+	imgs[0] = Image(qImage1,point_score1);	
+
+	QString score_2 = QString::number(score2);
+	QImage qImage2 = QImage(QSize(50,50), QImage::Format_RGB16);
+	QPainter *painter2 = new QPainter(&qImage2);
+	painter2->fillRect(0, 0, 50, 50, QColor(240, 240, 240));			
+	painter2->setPen(QColor(0,0,0));
+	painter2->setFont(QFont("Arial", 24));
+	painter2->drawText(0, 25, score_2);
+	QPoint point_score2 = QPoint(720, 40);		
+	imgs[1] = Image(qImage2,point_score2);	
+
+	imgs[2] = Image(*m_ball, m_ball_pos);
 	QPoint left = QPoint(LEFTPAD_XPOS, m_leftpad_ypos);
-	imgs[1] = Image(*m_pad, left);
+	imgs[3] = Image(*m_pad, left);
 	QPoint right = QPoint(RIGHTPAD_XPOS, m_rightpad_ypos);		
-	imgs[2] = Image(*m_pad, right);		
-	emit SquaresProcessed (imgs, 3);
+	imgs[4] = Image(*m_pad, right);	
+
+	emit SquaresProcessed (imgs, 5);
+
+	delete painter1;
+	delete painter2;
 }
 
 
