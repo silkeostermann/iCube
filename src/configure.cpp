@@ -7,9 +7,10 @@ Configure::Configure(QWidget *parent, QString fname)
 	
 	ui.setupUi(this);
 	setWindowTitle("Configure bindings");
+	setFixedSize(544, 324);
 	QStringList headers;
 	headers.append("Contour Count");
-	headers.append("Name");
+	headers.append("Virtual Object");
 	this->fname = fname;
 	printf("%s\n", fname.toAscii().data());
 	QList<QStringList> recognitionConfig = ConfigurationFileHelper::ReadConfiguration(fname + ".recognition");
@@ -45,7 +46,8 @@ Configure::Configure(QWidget *parent, QString fname)
 		}
 		ui.tableWidget->setCellWidget(row, 1, m_cbo);
 	}
-
+	ui.tableWidget->setColumnWidth(0, 150);
+	ui.tableWidget->setColumnWidth(1, 300);
 	QObject::connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(ChangeFile()));
 }
 //----------------------------------------------------------------------

@@ -39,6 +39,7 @@ class ColorPalette : public QObject
 
 		ModuleConfig *moduleConfig;
 		
+    QHash<int, int> stats;
     QHash<QString, CvPoint> lastPoints;
     QHash<QString, int> lastPointsDuration;
 
