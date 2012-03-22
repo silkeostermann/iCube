@@ -1,104 +1,79 @@
 #include "PinguinFlight.h"
-#include <cstdio>
-#include <QtGui/QImage>
-#include <QtGui/QColor>
-#include <QtGui/QPainter>
-#include <QtGui/QImage>
-#include <QtGui/QColor>
-#include <QtGui/QTransform>
-#include <QtCore/QRect>
-#include <QThread>
-#include <opencv/highgui.h>
-
-// Here goes member definition
-
-//
-
-
-//---------------------------------------------------------------
-// Slot to subscribe for event.
-// Expects to receive array of pointers on quadrilaterals instances which were recognized
-//---------------------------------------------------------------
 
 PinguinFlight::PinguinFlight()
 {
-	chosenImage=0;
+	m_penguinWingsUp = true;
 
-	northpole = QImage("./Logic/PinguinFlight/northpole.jpg");
-	penguin0a = QImage("./Logic/PinguinFlight/pinguin0a.png");
-	penguin90a = QImage("./Logic/PinguinFlight/pinguin90a.png");
-	penguin180a = QImage("./Logic/PinguinFlight/pinguin180a.png");
-	penguin270a = QImage("./Logic/PinguinFlight/pinguin270a.png");
-	penguin0b = QImage("./Logic/PinguinFlight/pinguin0b.png");
-	penguin90b = QImage("./Logic/PinguinFlight/pinguin90b.png");
-	penguin180b = QImage("./Logic/PinguinFlight/pinguin180b.png");
-	penguin270b = QImage("./Logic/PinguinFlight/pinguin270b.png");
+	m_background = Image (QImage ("./Logic/PinguinFlight/northpole.jpg"), 
+					QPoint (1, 1));
 
+	m_inclined0penguin_1 = QImage ("./Logic/PinguinFlight/pinguin0a.png");
+	m_inclined0penguin_2 = QImage ("./Logic/PinguinFlight/pinguin0b.png");
 
+	m_inclined90penguin_1 = QImage ("./Logic/PinguinFlight/pinguin90a.png");
+	m_inclined90penguin_2 = QImage ("./Logic/PinguinFlight/pinguin90b.png");
+
+	m_inclined180penguin_1 = QImage ("./Logic/PinguinFlight/pinguin180a.png");
+	m_inclined180penguin_2 = QImage ("./Logic/PinguinFlight/pinguin180b.png");
+
+	m_inclined270penguin_1 = QImage ("./Logic/PinguinFlight/pinguin270a.png");
+	m_inclined270penguin_2 = QImage ("./Logic/PinguinFlight/pinguin270b.png");
 }
+
+//---------------------------------------------------------------
 
 void PinguinFlight::ProcessSquares (const Square *recognizedSquares, int size)
 {
-	//printf("IN PENGUIN: %d\n", QThread::currentThreadId());
-  printf("[PinguinFlight] ProcessSquares\n");
+  	printf ("[PinguinFlight] ProcessSquares\n");
   
-	Image *images = new Image [size+1];
-
-
-	images[0] = Image (northpole, QPoint (1, 1));
-	for (int i=0, t = 1; i < size; i++, t++)
+	Image* images = new Image [size];
+	for (int i = 0; i < size; i++)
 	{
-		QImage *img;
-		if(recognizedSquares[i].GetAngle() == 0) {
-			if(chosenImage==0){
-				img = &penguin0a;
-			} else {
-				img = &penguin0b;
-			}
+		QImage* img;
+		if (recognizedSquares [i].GetAngle () == 0)
+		{
+			if (m_penguinWingsUp)
+				img = &m_inclined0penguin_1;
+			else
+				img = &m_inclined0penguin_2;
 		}
-		else if(recognizedSquares[i].GetAngle() == 90) {
-			if(chosenImage==0){
-				img = &penguin90a;
-			} else {
-				img = &penguin90b;
-			}		}
-		else if(recognizedSquares[i].GetAngle() == 180) {
-			if(chosenImage==0){
-				img = &penguin180a;
-			} else {
-				img = &penguin180b;
-			}		}
-		else if(recognizedSquares[i].GetAngle() == 270) {
-			if(chosenImage==0){
-				img = &penguin270a;
-			} else {
-				img = &penguin270b;
-			}		}
-		CvPoint centCoord = recognizedSquares [i].GetCenterCoordinates ();
-		centCoord.x = centCoord.x * 6;
-		centCoord.y = centCoord.y * 4;
-		images[t] = Image (*img, QPoint (centCoord.x, centCoord.y));
+		else if (recognizedSquares [i].GetAngle () == 90)
+		{
+			if (m_penguinWingsUp)
+				img = &m_inclined90penguin_1;
+			else
+				img = &m_inclined90penguin_2;
+		}
+		else if (recognizedSquares [i].GetAngle () == 180)
+		{
+			if (m_penguinWingsUp)
+				img = &m_inclined180penguin_1;
+			else
+				img = &m_inclined180penguin_2;
+		}
+		else if (recognizedSquares [i].GetAngle () == 270)
+		{
+			if (m_penguinWingsUp)
+				img = &m_inclined270penguin_1;
+			else 
+				img = &m_inclined270penguin_2;
+		}
+
+		CvPoint coord = recognizedSquares [i].GetCenterCoordinates ();
+		coord.x = coord.x  * (SCREEN_WIDTH / 100);
+		coord.y = coord.y * (SCREEN_HEIGHT / 100);
+
+		images [i] = Image (*img, QPoint (coord.x, coord.y));
+
+		printf ("[PinguinFlight] Image number %d (%d;%d)\n", i,
+			images [i].imageRelativeCoordinates.x (),
+			images [i].imageRelativeCoordinates.y ());
 	}
 
-	if(chosenImage==0){
-		chosenImage=1;
-	} else {
-		chosenImage=0;
-	}
+	m_penguinWingsUp = !m_penguinWingsUp;
 
-	emit SquaresProcessed (images, size+1);
+	emit SquaresProcessed (&m_background, 1);
+	emit SquaresProcessed (images, size);
+
 	delete [] images;
 }
-
-
-//---------------------------------------------------------------
-// Destructor.
-// Releases used resources.
-//---------------------------------------------------------------
-
-PinguinFlight::~PinguinFlight ()
-{
-
-}
-
-//void GetColor()

@@ -1,6 +1,5 @@
 #include "icubes.h"
 
-
 iCubes::iCubes(QWidget *parent)
 	: QMainWindow(parent)
 {
@@ -8,38 +7,45 @@ iCubes::iCubes(QWidget *parent)
   this->setupModules();
 }
 
+//--------------------------------------------------------------
+
 void iCubes::configureInterface() {
 	ui.setupUi (this);
-	setFixedSize(800, 466);
-	setWindowTitle("iCubes");
+	setFixedSize (SCREEN_WIDTH, SCREEN_HEIGHT);
+	setWindowTitle ("iCubes");
+
 	for (int i = 0; i < SIZE; i++)
 		m_labels [i] = new QLabel (this);
 
 	QObject::connect (ui.buttonConfigure, SIGNAL (clicked()),
-						        this, SLOT (ShowConfigureDialog()));
+		        this, SLOT (ShowConfigureDialog()));
 	
-  QObject::connect(ui.moduleCombo, SIGNAL(currentIndexChanged(const QString &)),
-                   this, SLOT(changeModule(const QString &)));
+	QObject::connect(ui.moduleCombo, SIGNAL(currentIndexChanged(const QString &)),
+                   	this, SLOT(changeModule(const QString &)));
+
 	QObject::connect (ui.StartstopButton, SIGNAL (clicked()),
-						this, SLOT (StartStop()));
+			this, SLOT (StartStop()));
 
 }
+
 //--------------------------------------------------------------
+
 void iCubes::StartStop()
 {
 	if(QString::compare(ui.StartstopButton->text(), new QString("Start")) == 0)
 	{
-		m_frameProcessor.BeginRead(0, 25);
+		m_frameProcessor.BeginRead (0, 10);
 		ui.StartstopButton->setText(QString("Stop"));	
 	} else 
 	{
-		m_frameProcessor.EndRead();
+		m_frameProcessor.EndRead ();
 		ui.StartstopButton->setText(QString("Start"));	
 	}	
 }
 
 //------------------------------------------------------------
-void iCubes::setupModules() {
+void iCubes::setupModules()
+{
   this->modules["BinaryMath"]    = &(this->m_binMath);
   this->modules["ColorPalette"]  = &(this->m_colorPalette);
   this->modules["PinguinFlight"] = &(this->m_pinguinFlight);
@@ -47,16 +53,15 @@ void iCubes::setupModules() {
 
   this->currentModule = NULL;
   QList<QString> moduleNames = this->modules.keys();
-  ui.moduleCombo->addItem(""); // Empty item to let user select module
-  for (int i = 0; i < moduleNames.size(); i++) {
-    ui.moduleCombo->addItem(moduleNames.at(i));
-  }
+  ui.moduleCombo->addItem("");
+  for (int i = 0; i < moduleNames.size(); i++)
+  	ui.moduleCombo->addItem(moduleNames.at(i));
 }
 
 //---------------------------------------------------------------
-// Connects module's "SquaresProcessed" signal to iCubes' "ShowObjects" slot
-//---------------------------------------------------------------
-void iCubes::disconnectModule(QObject *module) {
+
+void iCubes::disconnectModule(QObject *module)
+{
   printf("Disconnecting module! [TODO]\n");
   QObject::disconnect(&m_frameProcessor, SIGNAL(SquaresRecognized(const Square*, int)),
                       module, 0);
@@ -65,7 +70,9 @@ void iCubes::disconnectModule(QObject *module) {
 }
 
 //---------------------------------------------------------------------------
-void iCubes::setupModule(QObject *module) {
+
+void iCubes::setupModule(QObject *module)
+{
 	QObject::connect(module, SIGNAL(SquaresProcessed(const Image*, int)),
 									 this, SLOT(ShowObjects(const Image*, int)));
 
@@ -74,7 +81,9 @@ void iCubes::setupModule(QObject *module) {
 }
 
 //---------------------------------------------------------------------------
-void iCubes::changeModule(const QString &moduleName) {
+
+void iCubes::changeModule(const QString &moduleName)
+{
   if (moduleName == "") return;
 
   if (this->currentModule != NULL) {
@@ -89,9 +98,7 @@ void iCubes::changeModule(const QString &moduleName) {
 }
 
 //---------------------------------------------------------------
-// Gets processed objects which to draw.
-// Expects pointer on valid processed objects array.
-//---------------------------------------------------------------
+
 void iCubes::ShowObjects(const Image* processedSquares, int count)
 {
 	QPoint point_canvas = ui.groupBox->pos();
@@ -109,6 +116,8 @@ void iCubes::ShowObjects(const Image* processedSquares, int count)
 		m_labels [i]->setSizePolicy (QSizePolicy::Expanding, QSizePolicy::Expanding);
 		m_labels [i]->setAlignment (Qt::AlignCenter);
 		m_labels [i]->show();
+
+		printf ("[iCubes] ShowObjects () %d th object processed\n", i);
 	}
 
 	for(int i = count; i < SIZE; i++)
@@ -116,28 +125,28 @@ void iCubes::ShowObjects(const Image* processedSquares, int count)
 }
 
 //---------------------------------------------------------------
+
 void iCubes::ShowConfigureDialog ()
 {
-	Configure *configurator = new Configure(this, ui.moduleCombo->currentText());
+	Configure* configurator = new Configure (this, ui.moduleCombo->currentText ());
 	configurator->setModal (true);
 	configurator->show ();
 }
 
 //--------------------------------------------------------------
+
 void iCubes::closeEvent(QCloseEvent *event)
 {
-	m_frameProcessor.EndRead();
-	while(m_frameProcessor.isRunning()) {
-		sleep(1);
-	}
+	m_frameProcessor.EndRead ();
+
 	event->accept();
 }
 
 //---------------------------------------------------------------
+
 iCubes::~iCubes()
 {
 	for (int i = 0; i < SIZE; i++)
 		delete m_labels [i];
-
 }
 

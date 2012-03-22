@@ -45,6 +45,10 @@ class iCubes : public QMainWindow
     void setupModule (QObject *module);
     void disconnectModule(QObject *module);
 
+
+	static const int SCREEN_WIDTH = 800;
+	static const int SCREEN_HEIGHT = 466;
+
 		Ui::iCubesClass ui;
 
     QHash<QString, QObject *> modules;
@@ -59,5 +63,4 @@ class iCubes : public QMainWindow
 		QLabel* m_labels [SIZE];
 
 };
-
 #endif // ICUBES_H
