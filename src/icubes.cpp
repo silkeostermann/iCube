@@ -43,6 +43,7 @@ void iCubes::setupModules() {
   this->modules["BinaryMath"]    = &(this->m_binMath);
   this->modules["ColorPalette"]  = &(this->m_colorPalette);
   this->modules["PinguinFlight"] = &(this->m_pinguinFlight);
+  this->modules["Pong"] = &(this->m_pong);
 
   this->currentModule = NULL;
   QList<QString> moduleNames = this->modules.keys();

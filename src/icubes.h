@@ -14,6 +14,7 @@
 #include "Logic/ModuleBinaryMath/BinaryMath.h"
 #include "Logic/ModuleColorPalette/ColorPalette.h"
 #include "Logic/PinguinFlight/PinguinFlight.h"
+#include "Logic/Pong/pong.h"
 #include <QtGui/QMainWindow>
 #include <QLabel>
 #include <QCloseEvent>
@@ -53,6 +54,7 @@ class iCubes : public QMainWindow
 		BinaryMath      m_binMath;
 		ColorPalette    m_colorPalette;
 		PinguinFlight   m_pinguinFlight;
+		Pong		m_pong;
 
 		QLabel* m_labels [SIZE];
 
