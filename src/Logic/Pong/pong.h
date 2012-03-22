@@ -24,8 +24,9 @@ class Pong : public QObject
 		QPoint m_rightpad_pos;
   		ModuleConfig *moduleConfig;
 		int m_leftpad_ypos, m_rightpad_ypos;
-
+		int m_waiting_counter;
 		void restart();	
+		void randomizeSpeed();
 	public:
 		Pong();
 		~Pong();

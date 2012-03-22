@@ -9,7 +9,9 @@
 #include <QtCore/QRect>
 #include <QThread>
 #include <opencv/highgui.h>
-
+#include <ctime>    
+#include <cstdlib> 
+   
 const int CANVAS_W = 700;
 const int CANVAS_H = 400;
 const int BALL_SIZE = 50;
@@ -19,9 +21,9 @@ const int RIGHTPAD_XPOS = 680;
 
 Pong::Pong()
 {
+	srand(time(0));
+    	restart();
 	m_leftpad_ypos = m_rightpad_ypos = CANVAS_H / 2 + PAD_SIZE / 2;
-	m_ball_pos = QPoint(CANVAS_W / 2, CANVAS_H / 2);
-	m_ball_speed = QPoint(10, 10);
 
 	moduleConfig = new ModuleConfig("Pong");
 
@@ -33,7 +35,35 @@ Pong::Pong()
 
 void Pong::restart() 
 {
+	int sign, magnitude;
+
+	m_waiting_counter = 20;
 	m_ball_pos = QPoint(CANVAS_W / 2, CANVAS_H / 2);
+	sign = rand() % 2;
+	if(sign == 0) sign = -1;
+	magnitude = 5 + rand() % 11;
+	int sx = sign * magnitude;
+
+	if(sign == 0) sign = -1;
+	magnitude = 5 + rand() % 11;
+	int sy = sign * magnitude;
+
+	m_ball_speed = QPoint(sx, sy);
+}
+
+int sign(int v)
+{
+	return v > 0 ? 1 : (v < 0 ? -1 : 0);
+}
+
+void Pong::randomizeSpeed()
+{	
+	int xsign = sign(m_ball_speed.x());
+	int newx = abs(m_ball_speed.x() -2 + rand () % 5);
+	int ysign = sign(m_ball_speed.y());
+	int newy = abs(m_ball_speed.y() -2 + rand () % 5);
+	m_ball_speed.setX(xsign * newx);
+	m_ball_speed.setY(ysign * newy);
 }
 
 void Pong::ProcessSquares (const Square *recognizedSquares, int size)
@@ -52,28 +82,36 @@ void Pong::ProcessSquares (const Square *recognizedSquares, int size)
 		}
 	}
 	
-	m_ball_pos.setX(m_ball_pos.x() + m_ball_speed.x());
-	m_ball_pos.setY(m_ball_pos.y() + m_ball_speed.y());
-	
+	if(m_waiting_counter > 0)
+	{
+		m_waiting_counter--;
+	} else 
+	{
+		m_ball_pos.setX(m_ball_pos.x() + m_ball_speed.x());
+		m_ball_pos.setY(m_ball_pos.y() + m_ball_speed.y());
+	}	
+
 	if(m_ball_pos.x() + BALL_SIZE > RIGHTPAD_XPOS)
 	{
 		//printf("%d %d\n", m_rightpad_ypos, m_ball_pos.y());
 		if(abs(m_rightpad_ypos - m_ball_pos.y() + BALL_SIZE/2) < PAD_SIZE / 2)
 		{
                 	m_ball_pos.setX(RIGHTPAD_XPOS - BALL_SIZE);
-                	m_ball_speed.setX(-m_ball_speed.x());               
+                	m_ball_speed.setX(-m_ball_speed.x());   
+			randomizeSpeed();            
 		} 
 		else 
 		{
 			restart();	
 		}	
 	}
-	if(m_ball_pos.x() < LEFTPAD_XPOS + 15)
+	if(m_ball_pos.x() < LEFTPAD_XPOS + 25)
         {
 		if(abs(m_leftpad_ypos - m_ball_pos.y()+ BALL_SIZE/2) < PAD_SIZE / 2)
 		{
-                	m_ball_pos.setX(LEFTPAD_XPOS + 15);
-                	m_ball_speed.setX(-m_ball_speed.x());               
+                	m_ball_pos.setX(LEFTPAD_XPOS + 25);
+                	m_ball_speed.setX(-m_ball_speed.x());   
+			randomizeSpeed();            
 		} 
 		else 
 		{
@@ -83,12 +121,14 @@ void Pong::ProcessSquares (const Square *recognizedSquares, int size)
 	if(m_ball_pos.y() + BALL_SIZE > CANVAS_H)
         {
                 m_ball_pos.setY(CANVAS_H - BALL_SIZE);
-                m_ball_speed.setY(-m_ball_speed.y());               
+                m_ball_speed.setY(-m_ball_speed.y());
+		randomizeSpeed();               
         }
         if(m_ball_pos.y() < 0)
         {
                 m_ball_pos.setY(0);
                 m_ball_speed.setY(-m_ball_speed.y());
+		randomizeSpeed();
         }
 	
 	Image imgs[3];
