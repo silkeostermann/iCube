@@ -184,7 +184,7 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 
   IplImage* Img = cvCreateImage(cvGetSize (img), 8, 1);
 
-  cvAdaptiveThreshold(temp, Img, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 151, 1);
+  cvAdaptiveThreshold(temp, Img, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 131, 1);
   
   ret = img;
 
