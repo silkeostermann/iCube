@@ -2,6 +2,10 @@
 
 #define PI 3.14
 
+bool compare(const Square &a, const Square &b) {
+	return a.GetCenterCoordinates().x < b.GetCenterCoordinates().y;
+}
+
 //-----------------------------------------------------------
 float FrameProcessor::Euclid_dist(CvPoint *p1, CvPoint *p2)
 {
@@ -117,7 +121,30 @@ void FrameProcessor::run ()
 
 
     DetectAndDrawQuads (img, cubes, capture);
+
+    /*
+    if (cubes.size() > 0) {
+      printf("%d [%d, %d]\n", cubes[0].GetContoursCount(), cubes[0].GetCenterCoordinates().x, cubes[0].GetCenterCoordinates().y);
+    }
+    */
+
+    const int window = 4; //filtering distance
+    sort(cubes.begin(), cubes.end(), compare);
+    for (int i = 0; i < (int)cubes.size()-1; i++) {
+      printf("Looking at index %d\n", i);
+      printf("Scanning cube %d\n", cubes[i].GetContoursCount());
+      if (abs(cubes[i].GetCenterCoordinates().x - cubes[i+1].GetCenterCoordinates().x) <= window) {
+        if (abs(cubes[i].GetCenterCoordinates().y - cubes[i+1].GetCenterCoordinates().y) <= window) {
+          int iRemove = (cubes[i].GetContoursCount() >= cubes[i+1].GetContoursCount()) ? i : i+1;
+          cubes.erase(cubes.begin() + iRemove);
+          i++;
+        }
+      }
+    }
+    
+
     Square* squareArr = new Square [cubes.size()];
+
 
     for (unsigned int i = 0; i < cubes.size(); i++)
     {
@@ -156,14 +183,10 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 	cvCvtColor(img, temp, CV_BGR2GRAY);
 
   IplImage* Img = cvCreateImage(cvGetSize (img), 8, 1);
-  // IplImage *Img = temp;
-  // cvThreshold(temp, threshold1, 142, 255, CV_THRESH_BINARY);
-  cvAdaptiveThreshold(temp, Img, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 169, -20);
-  // cvAdaptiveThreshold(temp, ret, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 69, -20);
+
+  cvAdaptiveThreshold(temp, Img, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 151, 1);
   
   ret = img;
-
-  // for (int i = 0; i < )
 
   cvShowImage("cam2", Img);
 
