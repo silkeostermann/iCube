@@ -59,9 +59,9 @@ int sign(int v)
 void Pong::randomizeSpeed()
 {	
 	int xsign = sign(m_ball_speed.x());
-	int newx = abs(m_ball_speed.x() -2 + rand () % 5);
+	int newx = 5 + rand() % 11;
 	int ysign = sign(m_ball_speed.y());
-	int newy = abs(m_ball_speed.y() -2 + rand () % 5);
+	int newy = 5 + rand() % 11;
 	m_ball_speed.setX(xsign * newx);
 	m_ball_speed.setY(ysign * newy);
 }
@@ -121,14 +121,12 @@ void Pong::ProcessSquares (const Square *recognizedSquares, int size)
 	if(m_ball_pos.y() + BALL_SIZE > CANVAS_H)
         {
                 m_ball_pos.setY(CANVAS_H - BALL_SIZE);
-                m_ball_speed.setY(-m_ball_speed.y());
-		randomizeSpeed();               
+                m_ball_speed.setY(-m_ball_speed.y());		               
         }
         if(m_ball_pos.y() < 0)
         {
                 m_ball_pos.setY(0);
-                m_ball_speed.setY(-m_ball_speed.y());
-		randomizeSpeed();
+                m_ball_speed.setY(-m_ball_speed.y());		
         }
 	
 	Image imgs[3];
