@@ -10,7 +10,7 @@ iCubes::iCubes(QWidget *parent)
 
 void iCubes::configureInterface() {
 	ui.setupUi (this);
-	setFixedSize(800, 600);
+	setFixedSize(800, 466);
 	setWindowTitle("iCubes");
 	for (int i = 0; i < SIZE; i++)
 		m_labels [i] = new QLabel (this);
@@ -45,7 +45,7 @@ void iCubes::setupModules() {
   this->modules["PinguinFlight"] = &(this->m_pinguinFlight);
   this->modules["Pong"] = &(this->m_pong);
 
-  this->currentModule = &m_pong;
+  this->currentModule = NULL;
   QList<QString> moduleNames = this->modules.keys();
   ui.moduleCombo->addItem(""); // Empty item to let user select module
   for (int i = 0; i < moduleNames.size(); i++) {
