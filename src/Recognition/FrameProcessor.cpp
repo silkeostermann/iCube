@@ -150,13 +150,12 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 	CvSeq* result;
 	CvMemStorage *storage = cvCreateMemStorage(0);
 
-  IplImage* ret = cvCreateImage(cvGetSize(img), 8, 3);
+  IplImage* ret;
 	IplImage* temp = cvCreateImage(cvGetSize(img), 8, 1);
 
 	cvCvtColor(img, temp, CV_BGR2GRAY);
 
   IplImage* Img = cvCreateImage(cvGetSize (img), 8, 1);
-  IplImage *threshold1 = cvCreateImage(cvGetSize(img), 8, 1);
   // IplImage *Img = temp;
   // cvThreshold(temp, threshold1, 142, 255, CV_THRESH_BINARY);
   cvAdaptiveThreshold(temp, Img, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 169, -20);
