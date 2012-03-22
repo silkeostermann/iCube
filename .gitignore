@@ -2,3 +2,4 @@ build/
 Makefile.Release
 Makefile.Debug
 Makefile
+iCubes.pro
