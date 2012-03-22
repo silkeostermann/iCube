@@ -41,6 +41,9 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 	for (int i=0; i < size; i++)
 	{
 		Square *square = (Square *) &(recognizedSquares[i]);
+    int contoursCount = square->GetContoursCount();
+    if (!this->stats.contains(contoursCount)) this->stats[contoursCount] = 0;
+    this->stats[contoursCount] += 1;
 		QString objectName = this->moduleConfig->objectForSquare(square);
 		
     printf("Square: %s (%d) ", qPrintable(objectName), square->GetContoursCount());
@@ -48,6 +51,8 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 		if (objectName == "red") 		red = square;
 		if (objectName == "green") 	green = square;
 		if (objectName == "blue") 	blue = square;
+		
+    printf("Stats for %d (%s): %d", contoursCount, qPrintable(objectName), this->stats[contoursCount]);
 	}
   printf("\n");
 
@@ -89,7 +94,7 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 
 	// Compose the color
 	QColor color(redAmount, greenAmount, blueAmount, 255);
-	printf("Composing the color: [%d, %d, %d] => %lu\n", redAmount, greenAmount, blueAmount, color.rgba());
+  // printf("Composing the color: [%d, %d, %d] => %lu\n", redAmount, greenAmount, blueAmount, color.rgba());
 
   // User Interface
   
@@ -134,25 +139,25 @@ void ColorPalette::ProcessSquares (const Square *recognizedSquares, int size)
 
 
 CvPoint ColorPalette::pointFromSquareOrDefault(const Square *square, QString name) {
-  if (square != NULL && !this->lastPoints.contains(name)) {
-    CvPoint coords = square->GetCenterCoordinates();
-    this->lastPoints[name] = coords;
-    this->lastPointsDuration[name] = 0;
-    return coords;
-  } else if (square != NULL && this->lastPoints.contains(name)) {
-    this->lastPointsDuration[name] += 1;
-    CvPoint coords = square->GetCenterCoordinates();
-    return coords;
-  } else if (this->lastPoints.contains(name) && this->lastPointsDuration[name] > 5) {
-    return this->lastPoints[name];
-  } else if (this->lastPoints.contains(name)) {
-    // this->lastPointsDuration[name] += 1;
-    return cvPoint(0, 0);
-  } else {
-    this->lastPoints.remove(name);
-    this->lastPointsDuration.remove(name);
-    return cvPoint(0, 0);
+  if (square != NULL) { // Ked ho naslo
+    // this->lastPoints[name] = square->GetCenterCoordinates();
+
+    if (this->lastPointsDuration.contains(name)) {
+      this->lastPointsDuration[name] += 1;
+    } else {
+      this->lastPointsDuration[name] = 1;
+    }
+
+    if (this->lastPointsDuration[name] > 15) {
+      return square->GetCenterCoordinates();
+    }
+  } else { // Ked ho nenaslo
+    // return this->lastPoints[name];
   }
+
+
+  printf("Duration for %s: %d\n", qPrintable(name), this->lastPointsDuration[name]);
+  return cvPoint(0, 0);
 }
 
 //---------------------------------------------------------------

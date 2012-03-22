@@ -150,21 +150,23 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 	CvSeq* result;
 	CvMemStorage *storage = cvCreateMemStorage(0);
 
-	//IplImage* ret = cvCreateImage(cvGetSize(img), 8, 3);
+  IplImage* ret = cvCreateImage(cvGetSize(img), 8, 3);
 	IplImage* temp = cvCreateImage(cvGetSize(img), 8, 1);
 
 	cvCvtColor(img, temp, CV_BGR2GRAY);
 
-  IplImage* Img = cvCreateImage (cvGetSize (img), 8, 1);
+  IplImage* Img = cvCreateImage(cvGetSize (img), 8, 1);
   IplImage *threshold1 = cvCreateImage(cvGetSize(img), 8, 1);
   // IplImage *Img = temp;
   // cvThreshold(temp, threshold1, 142, 255, CV_THRESH_BINARY);
-  cvAdaptiveThreshold(temp, Img, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 69, -20);
+  cvAdaptiveThreshold(temp, Img, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 169, -20);
+  // cvAdaptiveThreshold(temp, ret, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 69, -20);
+  
+  ret = img;
 
   // for (int i = 0; i < )
-	
-  cvShowImage("cam1", Img);
-  // cvShowImage("cam2", threshold1);
+
+  cvShowImage("cam2", Img);
 
 	cvFindContours(Img, storage, &contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_NONE, cvPoint(0,0));
 	CvSeq* contours1 = contours;
@@ -198,9 +200,9 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 		
 		if(cvPointPolygonTest(result, triang, 0)  > 0){
 		  countTriang++;
-		  //cvLine(ret, *pt[0], *pt[1], cvScalar(30, 50, 50));
-		  //cvLine(ret, *pt[1], *pt[2], cvScalar(30, 50, 50));
-		  //cvLine(ret, *pt[2], *pt[0], cvScalar(30, 50, 50));
+		  cvLine(ret, *pt[0], *pt[1], cvScalar(255, 255, 0), 2);
+		  cvLine(ret, *pt[1], *pt[2], cvScalar(255, 255, 0), 2);
+		  cvLine(ret, *pt[2], *pt[0], cvScalar(255, 255, 0), 2);
 		  angle = GetAngle(pt);
 		}
 	      }
@@ -213,10 +215,14 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 	    for(int i=0;i<4;i++)
 	      pt[i] = (CvPoint*)cvGetSeqElem(result, i);
 	    
-	    //cvLine(ret, *pt[0], *pt[1], cvScalar(255));
-	    //cvLine(ret, *pt[1], *pt[2], cvScalar(255));
-	    //cvLine(ret, *pt[2], *pt[3], cvScalar(255));
-	    //cvLine(ret, *pt[3], *pt[0], cvScalar(255));
+	    cvLine(ret, *pt[0], *pt[1], cvScalar(255, 255, 0), 2);
+	    cvLine(ret, *pt[1], *pt[2], cvScalar(255, 255, 0), 2);
+	    cvLine(ret, *pt[2], *pt[3], cvScalar(255, 255, 0), 2);
+	    cvLine(ret, *pt[3], *pt[0], cvScalar(255, 255, 0), 2);
+	    cvCircle(ret, *pt[0], 3, cvScalar(0, 255, 255), 2);
+	    cvCircle(ret, *pt[1], 3, cvScalar(0, 255, 255), 2);
+	    cvCircle(ret, *pt[2], 3, cvScalar(0, 255, 255), 2);
+	    cvCircle(ret, *pt[3], 3, cvScalar(0, 255, 255), 2);
 	    
 	    CvSeq* contours3 = contours1;
 	    int countSquare = 0;
@@ -232,7 +238,7 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 		  ptCent[0].x = (pt[0]->x + pt[1]->x + pt[2]->x + pt[3]->x)/4;
 		  ptCent[0].y = (pt[0]->y + pt[1]->y + pt[2]->y + pt[3]->y)/4;
 		  
-		  //cvCircle(ret, ptCent[0], 5, cvScalar(255));
+		  cvCircle(ret, ptCent[0], 5, cvScalar(255));
 		  
 		  CvPoint2D32f square;
 		  square.x = ptCent[0].x;
@@ -241,10 +247,10 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 		  //cout << cvPointPolygonTest(result, triang, 0);
 		  if(cvPointPolygonTest(result, square, 0)  > 0){
 		    countSquare++;
-		    //cvLine(ret, *pt[0], *pt[1], cvScalar(90, 50, 50));
-		    //cvLine(ret, *pt[1], *pt[2], cvScalar(90, 50, 50));
-		    //cvLine(ret, *pt[2], *pt[3], cvScalar(90, 50, 50));
-		    //cvLine(ret, *pt[3], *pt[0], cvScalar(90, 50, 50));
+		    cvLine(ret, *pt[0], *pt[1], cvScalar(255, 255, 0), 2);
+		    cvLine(ret, *pt[1], *pt[2], cvScalar(255, 255, 0), 2);
+		    cvLine(ret, *pt[2], *pt[3], cvScalar(255, 255, 0), 2);
+		    cvLine(ret, *pt[3], *pt[0], cvScalar(255, 255, 0), 2);
 		    
 		  }
 		}
@@ -260,7 +266,7 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
 	    ptCent[0].x = (pt1[0]->x + pt1[1]->x + pt1[2]->x + pt1[3]->x)/4;
 	    ptCent[0].y = (pt1[0]->y + pt1[1]->y + pt1[2]->y + pt1[3]->y)/4;
 	    //printf("%d %d\n", ptCent[0].x, ptCent[0].y);
-	    //cvCircle(ret, ptCent[0], 5, cvScalar(255));
+	    cvCircle(ret, ptCent[0], 5, cvScalar(255));
 	    
 	    CvPoint pC[1];
 	    pC[0].x = ptCent[0].x;
@@ -282,8 +288,10 @@ void FrameProcessor::DetectAndDrawQuads(IplImage* img, vector <Square>& cubes, C
       contours = contours->h_next;
     }
 
+  cvShowImage("cam1", ret);
+
 	cvReleaseImage(&temp);
-	//cvReleaseImage(&ret);
+  // cvReleaseImage(&ret);
 	cvReleaseImage(&Img);
 	cvReleaseMemStorage(&storage);
 }
