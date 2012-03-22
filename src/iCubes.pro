@@ -10,11 +10,13 @@ HEADERS += ConfigurationFileHelper.h \
     Logic/PinguinFlight/PinguinFlight.h \
     Recognition/FrameProcessor.h \
     Recognition/Square.h \
+    Logic/Pong/Pong.h \
     icubes.h
 SOURCES += ConfigurationFileHelper.cpp \
     Logic/ModuleBinaryMath/BinaryMath.cpp \
     Logic/ModuleColorPalette/ColorPalette.cpp \
     Logic/PinguinFlight/PinguinFlight.cpp \
+    Logic/Pong/Pong.cpp \
     Recognition/FrameProcessor.cpp \
     Recognition/Square.cpp \
     icubes.cpp \

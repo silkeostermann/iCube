@@ -43,8 +43,9 @@ void iCubes::setupModules() {
   this->modules["BinaryMath"]    = &(this->m_binMath);
   this->modules["ColorPalette"]  = &(this->m_colorPalette);
   this->modules["PinguinFlight"] = &(this->m_pinguinFlight);
+  this->modules["Pong"] = &(this->m_pong);
 
-  this->currentModule = NULL;
+  this->currentModule = &m_pong;
   QList<QString> moduleNames = this->modules.keys();
   ui.moduleCombo->addItem(""); // Empty item to let user select module
   for (int i = 0; i < moduleNames.size(); i++) {
