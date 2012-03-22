@@ -10,51 +10,80 @@
 #include <QThread>
 #include <opencv/highgui.h>
 
+const int CANVAS_W = 700;
+const int CANVAS_H = 400;
+const int BALL_SIZE = 50;
+const int PAD_SIZE = 80;
+const int LEFTPAD_XPOS = 20;
+const int RIGHTPAD_XPOS = 680;
+
 Pong::Pong()
 {
-	m_ball_pos = QPoint(250, 200);
-	m_ball_speed = QPoint(20, 20);
+	m_leftpad_ypos = m_rightpad_ypos = CANVAS_H / 2 + PAD_SIZE / 2;
+	m_ball_pos = QPoint(CANVAS_W / 2, CANVAS_H / 2);
+	m_ball_speed = QPoint(15, 15);
 
 	moduleConfig = new ModuleConfig("Pong");
 
-	m_ball      = new QImage(QSize(52, 54),   QImage::Format_RGB16);
-	m_ball->load ("Logic/ModuleColorPalette/ball.png");
-	m_pad = new QImage(QSize(50, 200), QImage::Format_RGB16);
-	m_pad->load ("Logic/Pong/pad.png");
+	m_ball = new QImage();
+	m_ball->load("Logic/ModuleColorPalette/ball.png");
+	m_pad = new QImage();
+	m_pad->load("Logic/Pong/pad.png");
 }
 
 void Pong::ProcessSquares (const Square *recognizedSquares, int size)
 {
+	
+	for(int i = 0; i < size; i++)
+	{
+		if(recognizedSquares[i].GetContoursCount() == 1)
+		{
+			m_leftpad_ypos = recognizedSquares[i].GetCenterCoordinates().y * 5 + PAD_SIZE / 2;
+		}
+		if(recognizedSquares[i].GetContoursCount() == 2)
+		{
+			m_rightpad_ypos = recognizedSquares[i].GetCenterCoordinates().y * 5 + PAD_SIZE / 2;
+		}
+	}
+	
 	m_ball_pos.setX(m_ball_pos.x() + m_ball_speed.x());
 	m_ball_pos.setY(m_ball_pos.y() + m_ball_speed.y());
-	if(m_ball_pos.x() > 600)
+	
+	if(m_ball_pos.x() + BALL_SIZE / 2 > CANVAS_W)
 	{
-		m_ball_pos.setX(600);
+		m_ball_pos.setX(CANVAS_W - BALL_SIZE / 2);
 		m_ball_speed.setX(-m_ball_speed.x());		
 	}
-	if(m_ball_pos.x() < 10)
+	if(m_ball_pos.x()- BALL_SIZE / 2 < LEFTPAD_XPOS)
         {
-                m_ball_pos.setX(10);
-                m_ball_speed.setX(-m_ball_speed.x());               
+		if(abs(m_leftpad_ypos - m_ball_pos.y()) < PAD_SIZE / 2)
+		{
+                	m_ball_pos.setX(LEFTPAD_XPOS + BALL_SIZE / 2);
+                	m_ball_speed.setX(-m_ball_speed.x());               
+		} 
+		else 
+		{
+			m_ball_pos = QPoint(CANVAS_W / 2, CANVAS_H / 2);	
+		}
         }
-	if(m_ball_pos.y() > 300)
+	if(m_ball_pos.y() + BALL_SIZE / 2 > CANVAS_H )
         {
-                m_ball_pos.setY(300);
+                m_ball_pos.setY(CANVAS_H - BALL_SIZE / 2);
                 m_ball_speed.setY(-m_ball_speed.y());               
         }
-        if(m_ball_pos.y() < 10)
+        if(m_ball_pos.y() < BALL_SIZE / 2)
         {
-                m_ball_pos.setY(10);
+                m_ball_pos.setY(BALL_SIZE / 2);
                 m_ball_speed.setY(-m_ball_speed.y());
         }
-
 	
-	Image imgs[2];
+	Image imgs[3];
 	imgs[0] = Image(*m_ball, m_ball_pos);
-	QPoint p = QPoint(20, recognizedSquares[0].GetCenterCoordinates().y);
-	printf("%d %d\n", p.x(), p.y()); 
-	imgs[1] = Image(*m_pad, p);
-	emit SquaresProcessed (imgs, 2);
+	QPoint left = QPoint(LEFTPAD_XPOS, m_leftpad_ypos);
+	imgs[1] = Image(*m_pad, left);
+	QPoint right = QPoint(RIGHTPAD_XPOS, m_rightpad_ypos);		
+	imgs[2] = Image(*m_pad, right);		
+	emit SquaresProcessed (imgs, 3);
 }
 
 

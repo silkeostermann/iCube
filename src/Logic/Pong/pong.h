@@ -22,7 +22,8 @@ class Pong : public QObject
 		QPoint m_ball_speed;
 		QPoint m_leftpad_pos;
 		QPoint m_rightpad_pos;
-  		ModuleConfig *moduleConfig;	
+  		ModuleConfig *moduleConfig;
+		int m_leftpad_ypos, m_rightpad_ypos;	
 	public:
 		Pong();
 		~Pong();
