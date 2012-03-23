@@ -22,45 +22,43 @@
 
 class iCubes : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 	public:
-		iCubes(QWidget *parent = 0);
-		void closeEvent(QCloseEvent *);
+		iCubes (QWidget* parent = 0);
+		void closeEvent (QCloseEvent*);
 
-		~iCubes();
+		~iCubes ();
 
 	public slots:
 		void ShowObjects (const Image*, int);
-		void ShowConfigureDialog();
-    void changeModule(const QString &text);
+		void ShowConfigureDialog ();
+    		void ChangeModule (const QString &text);
 
-		void StartStop();
+		void StartStop ();
 
 	private:
-		const static int SIZE = 10;
-    
-    void configureInterface();
-    void setupModules();
-    void setupModule (QObject *module);
-    void disconnectModule(QObject *module);
+		void ConfigureInterface ();
+    		void SetupModules ();
+    		void SetupModule (QObject* module);
+    		void DisconnectModule (QObject* module);
+	
+		static const int MAX_VIRTUAL_OBJECT_COUNT = 10;
 
-
-	static const int SCREEN_WIDTH = 800;
-	static const int SCREEN_HEIGHT = 466;
+		static const int SCREEN_WIDTH = 800;
+		static const int SCREEN_HEIGHT = 466;
 
 		Ui::iCubesClass ui;
 
-    QHash<QString, QObject *> modules;
-    QObject *currentModule;
+    		QHash <QString, QObject*> modules;
+    		QObject* currentModule;
 
-		FrameProcessor  m_frameProcessor;
-		BinaryMath      m_binMath;
-		ColorPalette    m_colorPalette;
-		PinguinFlight   m_pinguinFlight;
-		Pong		m_pong;
+		FrameProcessor m_frameProcessor;
+		BinaryMath m_binMath;
+		ColorPalette m_colorPalette;
+		PinguinFlight m_pinguinFlight;
+		Pong m_pong;
 
-		QLabel* m_labels [SIZE];
-
+		QLabel* m_labels [MAX_VIRTUAL_OBJECT_COUNT];
 };
-#endif // ICUBES_H
+#endif
