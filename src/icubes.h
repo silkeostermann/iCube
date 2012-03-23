@@ -48,10 +48,10 @@ class iCubes : public QMainWindow
 		static const int SCREEN_WIDTH = 800;
 		static const int SCREEN_HEIGHT = 466;
 
-		Ui::iCubesClass ui;
+		Ui::iCubesClass m_ui;
 
-    		QHash <QString, QObject*> modules;
-    		QObject* currentModule;
+    		QHash <QString, QObject*> m_modules;
+    		QObject* m_currentModule;
 
 		FrameProcessor m_frameProcessor;
 		BinaryMath m_binMath;

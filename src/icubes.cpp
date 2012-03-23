@@ -11,7 +11,7 @@ iCubes::iCubes (QWidget *parent): QMainWindow (parent)
 void iCubes::ConfigureInterface ()
 {
 	// Initialize window
-	ui.setupUi (this);
+	m_ui.setupUi (this);
 	setFixedSize (SCREEN_WIDTH, SCREEN_HEIGHT);
 	setWindowTitle ("iCubes");
 
@@ -19,13 +19,13 @@ void iCubes::ConfigureInterface ()
 	for (int i = 0; i < MAX_VIRTUAL_OBJECT_COUNT; i++)
 		m_labels [i] = new QLabel (this);
 
-	QObject::connect (ui.buttonConfigure, SIGNAL (clicked ()),
+	QObject::connect (m_ui.buttonConfigure, SIGNAL (clicked ()),
 		        this, SLOT (ShowConfigureDialog ()));
 	
-	QObject::connect(ui.moduleCombo, SIGNAL (currentIndexChanged (const QString&)),
+	QObject::connect (m_ui.moduleCombo, SIGNAL (currentIndexChanged (const QString&)),
                    	this, SLOT (ChangeModule (const QString&)));
 
-	QObject::connect (ui.StartstopButton, SIGNAL (clicked ()),
+	QObject::connect (m_ui.StartstopButton, SIGNAL (clicked ()),
 			this, SLOT (StartStop ()));
 
 }
@@ -34,15 +34,15 @@ void iCubes::ConfigureInterface ()
 
 void iCubes::StartStop ()
 {
-	if (QString::compare (ui.StartstopButton->text (), new QString ("Start")) == 0)
+	if (QString::compare (m_ui.StartstopButton->text (), new QString ("Start")) == 0)
 	{
 		m_frameProcessor.BeginRead (0, 25);
-		ui.StartstopButton->setText (QString ("Stop"));	
+		m_ui.StartstopButton->setText (QString ("Stop"));	
 	}
 	else 
 	{
 		m_frameProcessor.EndRead ();
-		ui.StartstopButton->setText (QString ("Start"));	
+		m_ui.StartstopButton->setText (QString ("Start"));	
 	}	
 }
 
@@ -50,17 +50,17 @@ void iCubes::StartStop ()
 
 void iCubes::SetupModules ()
 {
-  modules ["BinaryMath"] = &(m_binMath);
-  modules ["ColorPalette"] = &(m_colorPalette);
-  modules ["PinguinFlight"] = &(m_pinguinFlight);
-  modules ["Pong"] = &(m_pong);
+  m_modules ["BinaryMath"] = &(m_binMath);
+  m_modules ["ColorPalette"] = &(m_colorPalette);
+  m_modules ["PinguinFlight"] = &(m_pinguinFlight);
+  m_modules ["Pong"] = &(m_pong);
 
-  currentModule = NULL;
-  QList <QString> moduleNames = modules.keys ();
-  ui.moduleCombo->addItem ("");
+  m_currentModule = NULL;
+  QList <QString> moduleNames = m_modules.keys ();
+  m_ui.moduleCombo->addItem ("");
 
   for (int i = 0; i < moduleNames.size (); i++)
-  	ui.moduleCombo->addItem (moduleNames.at (i));
+  	m_ui.moduleCombo->addItem (moduleNames.at (i));
 }
 
 //---------------------------------------------------------------
@@ -94,12 +94,12 @@ void iCubes::ChangeModule (const QString& moduleName)
 	if (moduleName == "")
 		return;
 
-  	if (currentModule != NULL)
-    		DisconnectModule (currentModule);
+  	if (m_currentModule != NULL)
+    		DisconnectModule (m_currentModule);
   
-  	currentModule = modules [moduleName];
+  	m_currentModule = m_modules [moduleName];
   
-  	SetupModule (currentModule);
+  	SetupModule (m_currentModule);
   
   	printf ("Changed module to %s\n", qPrintable (moduleName));
 }
@@ -108,7 +108,7 @@ void iCubes::ChangeModule (const QString& moduleName)
 
 void iCubes::ShowObjects (const Image* processedSquares, int count)
 {
-	QPoint point_canvas = ui.groupBox->pos ();
+	QPoint point_canvas = m_ui.groupBox->pos ();
 
 	int i = 0;
 	while ((i < count) && (i < MAX_VIRTUAL_OBJECT_COUNT))
@@ -138,7 +138,7 @@ void iCubes::ShowObjects (const Image* processedSquares, int count)
 
 void iCubes::ShowConfigureDialog ()
 {
-	Configure* configurator = new Configure (this, ui.moduleCombo->currentText ());
+	Configure* configurator = new Configure (this, m_ui.moduleCombo->currentText ());
 	configurator->setModal (true);
 	configurator->show ();
 }
