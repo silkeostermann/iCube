@@ -1,19 +1,21 @@
 ---
 
-Project name: iCubes
-Developed by: 
- Alexey Buzdin
- Maxims Ahadovs
- Anders Bruun
- Andrea Cuttone
- Rodrigo Martinez Vazquez
- Ethiel Figueira Diaz
- Igor Golyanov
- Ilja Zegars
- Vojtech Rinik
- Michal Puheim
- Silke Ostermann
- Seyed Ehsan Farshpour Rezaie
+# iCubes
+
+Developed by:
+
+- Alexey Buzdin
+- Maxims Ahadovs
+- Anders Bruun
+- Andrea Cuttone
+- Rodrigo Martinez Vazquez
+- Ethiel Figueira Diaz
+- Igor Golyanov
+- Ilja Zegars
+- Vojtech Rinik
+- Michal Puheim
+- Silke Ostermann
+- Seyed Ehsan Farshpour Rezaie
 
 ---
 
